@@ -1,7 +1,26 @@
 html {
-    color: #222;
-    font-size: 1em;
-    line-height: 1.4;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+@media screen and (min-width: 60rem) {
+    html {
+        font-size: 16px;
+    }
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    color: #333;
+    font-size: 1.125rem;
+    line-height: 1.6
+}
+
+a {
+    color: #900028;
+    text-decoration: none;
 }
 
 ::selection {
@@ -24,13 +43,120 @@ fieldset {
     padding: 0;
 }
 
+.container {
+    max-width: 90rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+
 /* ==========================================================================
-   Author's custom styles
+   Preference Sections
    ========================================================================== */
 
+.pref-section {
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    margin: 2rem 0;
+    overflow-y: hidden;
+    max-height: 13em;
+}
+
+.pref-label {
+    margin-top: 0;
+}
+
+.pref-list {
+    padding-bottom: 2em;
+}
+
+.pref-item {
+    display: block;
+    padding-bottom: 1rem;
+    padding-left: 20px;
+}
+
+.pref-selector {
+    margin-left: -20px;
+    margin-right: 6px;
+    width: 14px;
+}
+
+.pref-more {
+    display: block;
+    font-weight: bold;
+    line-height: 1;
+    padding-left: 4px;
+    opacity: 0;
+    transition: opacity .15s;
+}
+
+@media screen and (min-width: 35rem) {
+    .pref-list {
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+        column-count: 2;
+        -webkit-column-gap: 50px;
+        -moz-column-gap: 50px;
+        column-gap: 50px;
+        width: 100%;
+    }
+
+    .pref-item {
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
+
+@media screen and (min-width: 60rem) {
+    .pref-section {
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+    .pref-label {
+        width: 20rem;
+    }
+
+    .pref-list {
+        -webkit-flex: 1;
+        flex: 1;
+    }
+
+    .pref-more {
+        margin-left: 20rem;
+    }
+}
 
 
+/* ==========================================================================
+   States
+   ========================================================================== */
 
+.has-more {
+    position: relative;
+}
+.has-more .trigger-more {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    background: linear-gradient(to bottom, transparent, white 30%);
+    padding-top: 2em;
+    padding-bottom: 2em;
+    opacity: 1;
+}
+
+.is-open {
+    max-height: none;
+}
+.is-open .trigger-more {
+    opacity: 0;
+}
 
 
 
