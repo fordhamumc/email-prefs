@@ -6,11 +6,24 @@ function toggleMore(target) {
 }
 
 (function () {
-    var more = document.getElementsByClassName("trigger-more");
-    Array.prototype.map.call(more, function (link) {
-        link.addEventListener("click", function(e) {
-            e.preventDefault();
-            toggleMore(e.target.parentElement);
-        });
+    document.documentElement.className = "js";
+
+    var prefLists = document.getElementsByClassName("pref-list--container");
+    Array.prototype.map.call(prefLists, function (list) {
+        if (list.firstElementChild.childElementCount > 8) {
+
+            var el = document.createElement("a");
+                el.href = "#";
+                el.className = "trigger-more pref-more";
+                el.innerText = "+ More";
+
+            el.addEventListener("click", function(e) {
+                e.preventDefault();
+                toggleMore(e.target.parentElement);
+            });
+
+            list.appendChild(el);
+            list.classList.add("has-more");
+        }
     });
 })();
