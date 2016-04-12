@@ -55,11 +55,14 @@ fieldset {
    ========================================================================== */
 
 .pref-section {
-    position: relative;
     border-bottom: 1px solid #ddd;
     margin: 2rem 0;
+}
+
+.pref-list--container {
+    position: relative;
     overflow-y: hidden;
-    max-height: 13em;
+    max-height: 14em;
 }
 
 .pref-label {
@@ -67,12 +70,12 @@ fieldset {
 }
 
 .pref-list {
-    padding-bottom: 2em;
+    padding-bottom: 1.4em;
 }
 
 .pref-item {
     display: block;
-    padding-bottom: 1rem;
+    padding-bottom: 1em;
     padding-left: 20px;
 }
 
@@ -85,7 +88,6 @@ fieldset {
 .pref-more {
     display: block;
     font-weight: bold;
-    line-height: 1;
     padding-left: 4px;
     opacity: 0;
     transition: opacity .15s;
@@ -113,8 +115,6 @@ fieldset {
     .pref-section {
         display: -webkit-flex;
         display: flex;
-        -webkit-flex-wrap: wrap;
-        flex-wrap: wrap;
     }
 
     .pref-label {
@@ -125,10 +125,6 @@ fieldset {
         -webkit-flex: 1;
         flex: 1;
     }
-
-    .pref-more {
-        margin-left: 20rem;
-    }
 }
 
 
@@ -136,18 +132,21 @@ fieldset {
    States
    ========================================================================== */
 
-.has-more {
-    position: relative;
-}
-.has-more .trigger-more {
+
+.trigger-more {
     position: absolute;
+    display: block;
     width: 100%;
     bottom: 0;
     left: 0;
     background-color: white;
     background: linear-gradient(to bottom, transparent, white 30%);
     padding-top: 2em;
-    padding-bottom: 2em;
+    padding-bottom: 2.4em;
+    opacity: 0;
+}
+
+.has-more .trigger-more {
     opacity: 1;
 }
 
