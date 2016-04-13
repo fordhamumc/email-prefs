@@ -23,6 +23,11 @@ a {
     text-decoration: none;
 }
 
+p {
+    margin-top: 0;
+    margin-bottom: .7em;
+}
+
 ::selection {
     background: #b3d4fc;
     text-shadow: none;
@@ -46,7 +51,48 @@ fieldset {
 .container {
     max-width: 90rem;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 2rem 5rem;
+}
+
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+    font-size: 1.2em;
+    padding: .4em 2em;
+    border-radius: 4px;
+    letter-spacing: .03em;
+    display: inline-block;
+    text-align: center;
+    background: #900028;
+    color: #ffffff;
+    border: 1px solid #5d001a;
+    text-decoration: none;
+}
+
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.form-footer {
+    text-align: center;
+}
+
+
+/* ==========================================================================
+   Intro
+   ========================================================================== */
+
+.intro {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.intro-heading {
+    margin-bottom: .3em;
 }
 
 
