@@ -150,8 +150,7 @@ fieldset {
     display: block;
     font-weight: bold;
     padding-left: 4px;
-    opacity: 0;
-    transition: opacity .15s;
+    transition: visibility .15s, opacity .15s;
 }
 
 @media screen and (min-width: 35rem) {
@@ -215,10 +214,12 @@ fieldset {
     padding-top: 2.4em;
     padding-bottom: 2.4em;
     opacity: 0;
+    visibility: hidden;
 }
 
 .has-more .trigger-more {
     opacity: 1;
+    visibility: visible;
 }
 
 .has-more.is-open {
@@ -226,11 +227,8 @@ fieldset {
 }
 .is-open .trigger-more {
     opacity: 0;
+    visibility: hidden;
 }
-
-
-
-
 
 
 
