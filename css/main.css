@@ -67,6 +67,21 @@ fieldset {
 
 .pref-label {
     margin-top: 0;
+    margin-bottom: .8em;
+    display: inline-block;
+}
+
+.pref-multiselect {
+    font-size: .8em;
+    margin-left: 10px;
+    display: inline-block;
+}
+.pref-multiselect a + a:before {
+    content: ' | ';
+    color: #333;
+    pointer-events: none;
+    cursor: default;
+    position: relative;
 }
 
 .pref-list {
@@ -117,6 +132,16 @@ fieldset {
     }
 
     .pref-label {
+        margin-bottom: 0;
+        display: block;
+    }
+
+    .pref-multiselect {
+        margin-left: 0;
+        display: block;
+    }
+
+    .pref-label--container {
         width: 20rem;
     }
 
