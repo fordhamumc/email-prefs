@@ -42,6 +42,29 @@ function addMultiSelects(label, list) {
     label.appendChild(container);
 }
 
+function watchTextInputChanges() {
+    textInputs = document.querySelectorAll(".input-text");
+    function isDirty(input) {
+        if(input.value) {
+            input.offsetParent.classList.add("dirty");
+        } else {
+            input.offsetParent.classList.remove("dirty");
+        }
+    }
+    Array.prototype.map.call(textInputs, function(input) {
+        isDirty(input);
+        input.onfocus = function () {
+            input.offsetParent.classList.add("focused");
+        };
+        input.onblur = function () {
+            input.offsetParent.classList.remove("focused");
+        };
+        input.addEventListener("keyup", function(e) {
+            isDirty(e.target);
+        });
+    });
+}
+
 (function () {
     document.documentElement.className = "js";
     var prefSection = document.getElementsByClassName("pref-section");
@@ -55,4 +78,5 @@ function addMultiSelects(label, list) {
             addMoreLink(list);
         }
     });
+    watchTextInputChanges();
 })();
