@@ -48,6 +48,18 @@ fieldset {
     padding: 0;
 }
 
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.17em;
+}
+
 .container {
     max-width: 90rem;
     margin: 0 auto 5rem;
@@ -77,6 +89,67 @@ fieldset {
    Forms
    ========================================================================== */
 
+.input-group {
+    margin: 2rem 0 4rem;
+    position: relative;
+}
+
+.input-text,
+.float-label {
+    display: block;
+    width: 100%;
+    padding: .3em .7em;
+    transition-duration: .2s;
+}
+
+.input-text {
+    border: 1px solid #ccc;
+    max-width: 30em;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition-property: border, box-shadow;
+}
+
+.input-text:focus {
+    outline: none;
+    border-bottom-color: #900028;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 1px 0px 0px #900028;
+}
+
+.input-text:focus:valid {
+    border-bottom-color: #6D9297;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 1px 0px 0px #6D9297;
+}
+
+.float-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: rgba(0,0,0,.4);
+    pointer-events: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    transition-property: font, padding, bottom;
+}
+
+.float-label h3{
+    margin: 0;
+    font-weight: normal;
+}
+
+.no-js .float-label,
+.dirty .float-label {
+    color: #333;
+    font-size: 1.17em;
+    font-weight: bold;
+    padding-left: 0;
+    bottom: 1.7em;
+}
+.dirty .float-label {
+    -webkit-animation: fadeIn .4s;
+    animation: fadeIn .4s;
+}
+
 .form-footer {
     text-align: center;
     width: 100%;
@@ -87,12 +160,20 @@ fieldset {
    Intro
    ========================================================================== */
 
+.logo {
+    margin: 2rem auto;
+}
+
 .intro {
-    text-align: center;
+    background-color: #f0f0f0;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .intro-heading {
-    margin-bottom: .3em;
+    font-size: 1.7em;
+    font-weight: normal;
+    margin: 0 0 .2em;
 }
 
 
@@ -102,7 +183,10 @@ fieldset {
 
 .pref-section {
     border-bottom: 1px solid #ddd;
-    margin: 2rem 0;
+}
+
+.pref-section:last-child {
+    border-bottom: none;
 }
 
 .pref-list--container.has-more {
@@ -156,17 +240,17 @@ fieldset {
 @media screen and (min-width: 35rem) {
     .pref-list {
         -webkit-column-count: 2;
-        -moz-column-count: 2;
-        column-count: 2;
+           -moz-column-count: 2;
+                column-count: 2;
         -webkit-column-gap: 50px;
-        -moz-column-gap: 50px;
-        column-gap: 50px;
+           -moz-column-gap: 50px;
+                column-gap: 50px;
     }
 
     .pref-item {
         -webkit-column-break-inside: avoid;
-        page-break-inside: avoid;
-        break-inside: avoid;
+                  page-break-inside: avoid;
+                       break-inside: avoid;
     }
 }
 
@@ -192,7 +276,7 @@ fieldset {
 
     .pref-list--container {
         -webkit-flex: 1;
-        flex: 1;
+                flex: 1;
         width: 100%;
     }
 }
@@ -233,24 +317,22 @@ fieldset {
    Key frames
    ========================================================================== */
 
-@-webkit-keyframes zoomIn {
+@-webkit-keyframes fadeIn {
     from {
         opacity: 0;
-        -webkit-transform: scale3d(.3, .3, .3);
     }
 
-    50% {
+    to {
         opacity: 1;
     }
 }
 
-@keyframes zoomIn {
+@keyframes fadeIn {
     from {
         opacity: 0;
-        transform:  scale3d(.3, .3, .3);
     }
 
-    50% {
+    to {
         opacity: 1;
     }
 }
