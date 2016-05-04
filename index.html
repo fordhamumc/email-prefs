@@ -19,17 +19,17 @@
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
     If you prefer to not receive any emails from Fordham you can <a href="#">unsubscribe from all emails</a>.<br />
-        <small>*Students cannot unsubscribe from certain manditory emails.</small>
+        <small>*Students and parents cannot unsubscribe from certain manditory emails.</small>
     </p>
 </header>
 <form class="container">
-    <section class="input-group float-label--container">
+    <section class="form-group float-label--container">
         <label class="float-label" for="email">Email</label>
         <input type="email" name="email" id="email" class="input-text" required>
     </section>
 
-    <h3>Customize the types of emails you receive.</h3>
-    <div class="pref-container">
+    <h3>Customize the types of emails you receive:</h3>
+    <div class="form-group pref-container">
         <section id="events" role="group" class="pref-section input-group">
             <div class="pref-label">Events</div>
             <div class="pref-list--container">
@@ -109,27 +109,6 @@
                         </label>
                         <label class="pref-item">
                             <input class="pref-selector" type="checkbox" value="groups-wall-street">Wall Street Council
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <section id="news" role="group" class="pref-section input-group">
-            <div class="pref-label">News</div>
-            <div class="pref-list--container">
-                <div class="pref-list">
-                    <div class="pref-items">
-                        <label class="pref-item">
-                            <input class="pref-selector" type="checkbox" value="news-alumni" checked>Alumni News
-                        </label>
-                        <label class="pref-item">
-                            <input class="pref-selector" type="checkbox" value="news-fordham" checked>Fordham News
-                        </label>
-                        <label class="pref-item">
-                            <input class="pref-selector" type="checkbox" value="news-magazine" checked>Fordham Magazine
-                        </label>
-                        <label class="pref-item">
-                            <input class="pref-selector" type="checkbox" value="news-parents">Parents News
                         </label>
                     </div>
                 </div>
@@ -247,6 +226,30 @@
             </div>
         </section>
     </div>
+
+    <h3>Sign up for our newsletters:</h3>
+
+    <div class="form-group news-container">
+        <section class="input-group pref-container">
+            <label class="pref-item pref-section">
+                <input class="pref-selector" type="checkbox" value="fordham-news" checked><span class="news-title">Fordham News</span>
+                <div class="news-description">A weekly email with the latest news from Fordham.</div>
+            </label>
+            <label class="pref-item pref-section">
+                <input class="pref-selector" type="checkbox" value="fordham-magazine" checked><span class="news-title"><em>FORDHAM</em> Magazine</span>
+                <div class="news-description">A monthly digital version of our popular print magazine presenting news and feature stories about Fordham people—alumni, faculty, and students.</div>
+            </label>
+            <label class="pref-item pref-section">
+                <input class="pref-selector" type="checkbox" value="fordham-news" checked><span class="news-title">Alumni News</span>
+                <div class="news-description">A monthly email highlighting upcoming events and benefits for alumni.</div>
+            </label>
+            <label class="pref-item pref-section">
+                <input class="pref-selector" type="checkbox" value="parents-news"><span class="news-title">Parents News</span>
+                <div class="news-description">A quarterly email which highlights important dates, events, and news for parents of Fordham students.</div>
+            </label>
+        </section>
+    </div>
+
     <footer class="form-footer">
         <input type="submit" value="Update Your Preferences" class="btn">
     </footer>
