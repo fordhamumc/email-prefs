@@ -381,6 +381,10 @@ h3 {
         display: block;
     }
 
+    .active .pref-list {
+        max-width: 40rem;
+    }
+
     .active .pref-items,
     .pref-selected,
     .pref-multiselect,
