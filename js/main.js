@@ -1,7 +1,3 @@
-function toggleMore(target) {
-    return target.classList.toggle("is-open");
-}
-
 function toggleCheckboxes(type, list) {
     inputs = list.querySelectorAll('input');
     Array.prototype.map.call(inputs, function(input) {
@@ -9,21 +5,7 @@ function toggleCheckboxes(type, list) {
     });
 }
 
-function addMoreLink(list) {
-    var el = document.createElement("a");
-    el.href = "#";
-    el.className = "trigger-more pref-more";
-    el.innerText = "+ More";
-
-    el.addEventListener("click", function(e) {
-        e.preventDefault();
-        toggleMore(e.target.parentElement);
-    });
-    list.appendChild(el);
-    list.classList.add("has-more");
-}
-
-function addMultiSelects(label, list) {
+function addMultiSelects(list) {
     var container = document.createElement("div");
     container.className = "pref-multiselect";
 
@@ -39,25 +21,97 @@ function addMultiSelects(label, list) {
 
         container.appendChild(el);
     });
-    label.appendChild(container);
+    list.insertBefore(container, list.firstChild);
 }
 
-function watchTextInputChanges() {
-    textInputs = document.querySelectorAll(".input-text");
+function createOptionsContainer(list, label) {
+    var header = document.createElement("h3");
+        header.className = "pref-title";
+        header.innerText = label.innerText;
+
+    var closeButton = document.createElement("button");
+        closeButton.innerText = "Close";
+        closeButton.addEventListener("click", function(e) {
+            e.preventDefault();
+            closeOptions(list.parentElement);
+        });
+
+    var footer = document.createElement("footer");
+        footer.className = "pref-footer";
+        footer.appendChild(closeButton);
+    list.insertBefore(header, list.firstChild);
+    list.appendChild(footer);
+}
+
+function clickOff(e) {
+    if (e.target.classList.contains("pref-list--toggle")) {
+        closeOptions(e.target)
+    }
+}
+
+function closeOptions(listContainer) {
+    updateSelected(listContainer);
+    listContainer.removeEventListener("click", clickOff);
+    document.body.classList.remove("modal-open");
+    listContainer.parentElement.classList.remove("active");
+}
+
+function openOptions(listContainer) {
+    document.body.classList.add("modal-open");
+    listContainer.addEventListener("click", clickOff);
+    listContainer.classList.add("active");
+    listContainer.querySelector(".pref-list").scrollTop = 0;
+}
+
+function linkLabel(label, prefSections) {
+    var link = document.createElement("a");
+        link.href = "#";
+        link.innerText = label.innerText;
+    link.addEventListener("click", function(e) {
+        var currentSection = label.parentElement;
+        e.preventDefault();
+        Array.prototype.map.call(prefSections, function(section) {
+            section.classList.remove("active");
+        });
+        openOptions(currentSection);
+    });
+    label.innerText = '';
+    label.appendChild(link);
+}
+
+function updateSelected(listContainer) {
+    var selected = listContainer.querySelectorAll("input:checked");
+    var parent = listContainer.parentElement;
+    var container = parent.querySelector(".pref-selected") || document.createElement("ul");
+        container.className = "pref-selected";
+        container.innerHTML = "";
+
+    Array.prototype.map.call(selected, function(input, index) {
+        var item = document.createElement("li");
+            item.className = "pref-selected-item";
+            item.innerText = input.parentElement.innerText.trim() + ((index < selected.length - 1) ? ', ' : '');
+        container.appendChild(item);
+    });
+    parent.appendChild(container);
+}
+
+function watchTextInputChanges(textInputs) {
     function isDirty(input) {
+        var parent = input.parentElement
         if(input.value) {
-            input.offsetParent.classList.add("dirty");
+            parent.classList.add("dirty");
         } else {
-            input.offsetParent.classList.remove("dirty");
+            parent.classList.remove("dirty");
         }
     }
     Array.prototype.map.call(textInputs, function(input) {
         isDirty(input);
+        var parent = input.parentElement
         input.onfocus = function () {
-            input.offsetParent.classList.add("focused");
+            parent.classList.add("focused");
         };
         input.onblur = function () {
-            input.offsetParent.classList.remove("focused");
+            parent.classList.remove("focused");
         };
         input.addEventListener("keyup", function(e) {
             isDirty(e.target);
@@ -67,16 +121,22 @@ function watchTextInputChanges() {
 
 (function () {
     document.documentElement.className = "js";
-    var prefSection = document.getElementsByClassName("pref-section");
-    Array.prototype.map.call(prefSection, function(section) {
-        var label = section.getElementsByClassName("pref-label--container")[0];
-        var list = section.getElementsByClassName("pref-list--container")[0];
-        if (label) {
-            addMultiSelects(label, list);
+    var prefSections = document.getElementsByClassName("pref-section");
+    var textInputs = document.querySelectorAll(".input-text");
+    Array.prototype.map.call(prefSections, function(section) {
+        var label = section.getElementsByClassName("pref-label")[0];
+        var list = section.getElementsByClassName("pref-list")[0];
+        if (list) {
+            list.parentElement.classList.add('pref-list--toggle');
+            addMultiSelects(list);
+            updateSelected(list.parentElement);
         }
-        if (list.firstElementChild.childElementCount > 8) {
-            addMoreLink(list);
+        if (label) {
+            linkLabel(label, prefSections);
+        }
+        if (list && label) {
+            createOptionsContainer(list, label);
         }
     });
-    watchTextInputChanges();
+    watchTextInputChanges(textInputs);
 })();

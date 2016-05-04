@@ -66,6 +66,18 @@ h3 {
     padding: 0 2rem;
 }
 
+@media screen and (min-width: 35rem) {
+    .modal-open:after {
+        content: '';
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
 
 /* ==========================================================================
    Buttons
@@ -90,7 +102,10 @@ h3 {
    ========================================================================== */
 
 .input-group {
-    margin: 2rem 0 4rem;
+    margin-bottom: 2rem;
+}
+
+.float-label--container {
     position: relative;
 }
 
@@ -147,7 +162,7 @@ h3 {
 }
 .dirty .float-label {
     -webkit-animation: fadeIn .4s;
-    animation: fadeIn .4s;
+            animation: fadeIn .4s;
 }
 
 .form-footer {
@@ -181,30 +196,88 @@ h3 {
    Preference Sections
    ========================================================================== */
 
-.pref-section {
+.pref-label {
     border-bottom: 1px solid #ddd;
 }
-
-.pref-section:last-child {
-    border-bottom: none;
+.pref-label a {
+    display: block;
+    width: 100%;
 }
-
-.pref-list--container.has-more {
-    position: relative;
-    overflow-y: hidden;
-    max-height: 11.8em;
-}
-
-.pref-label {
-    margin-top: 0;
-    margin-bottom: .8em;
+.pref-label a:after {
+    content: '+';
     display: inline-block;
+    float: right;
+    margin-right: 5px;
+}
+
+.pref-selected {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.pref-selected-item {
+    display: inline;
+}
+
+.pref-list--toggle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    display: none;
+    transition-duration: .5s;
+    transition-property: opacity;
+    z-index: 1001;
+}
+.active .pref-list--toggle {
+    background: #fff;
+    display: block;
+    opacity: 1;
+    -webkit-animation: zoomIn .4s;
+            animation: zoomIn .4s;
+
+}
+
+.pref-items {
+    margin-top: 1.6em;
+}
+
+.active .pref-list {
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    overflow-y: scroll;
+    padding: 65px 0;
+}
+
+.pref-title,
+.pref-footer {
+    position: fixed;
+    width: 100%;
+    z-index: 1010;
+}
+
+.active .pref-items,
+.pref-title,
+.pref-footer {
+    padding: 18px 36px;
+    margin: 0;
+}
+
+.pref-title {
+    background: #6D9297;
+    color: #fff;
+    font-weight: normal;
+    top: 0;
 }
 
 .pref-multiselect {
-    font-size: .8em;
-    margin-left: 10px;
-    display: inline-block;
+    padding: 18px 36px 0;
 }
 .pref-multiselect a + a:before {
     content: ' | ';
@@ -214,8 +287,19 @@ h3 {
     position: relative;
 }
 
-.pref-list {
-    padding-bottom: 1.4em;
+.pref-footer {
+    background: #fff;
+    border-top: 1px solid #ddd;
+    bottom: 0;
+}
+.pref-footer button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #6D9297;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .pref-item {
@@ -230,15 +314,22 @@ h3 {
     width: 14px;
 }
 
-.pref-more {
-    display: block;
-    font-weight: bold;
-    padding-left: 4px;
-    transition: visibility .15s, opacity .15s;
-}
-
 @media screen and (min-width: 35rem) {
-    .pref-list {
+    .active .pref-list--toggle {
+        background-color: transparent;
+        padding: 6rem 0;
+        overflow-y: scroll;
+    }
+
+    .active .pref-list {
+        height: auto;
+        max-width: 30rem;
+        margin: 0 auto;
+        padding: 0;
+        overflow-y: visible;
+    }
+
+    .pref-items {
         -webkit-column-count: 2;
            -moz-column-count: 2;
                 column-count: 2;
@@ -252,17 +343,32 @@ h3 {
                   page-break-inside: avoid;
                        break-inside: avoid;
     }
+
+    .pref-title,
+    .pref-footer {
+        position: static;
+        width: auto;
+    }
 }
 
 @media screen and (min-width: 60rem) {
-    .pref-section {
+
+    .pref-container {
+        display: -ms-flexbox;
         display: -webkit-flex;
         display: flex;
+
+        -webkit-flex-flow: row wrap;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+
+        -webkit-justify-content: space-between;
+        -ms-justify-content: space-between;
+        justify-content: space-between;
     }
 
-    .pref-label {
-        margin-bottom: 0;
-        display: block;
+    .pref-section {
+        width: 45%;
     }
 
     .pref-multiselect {
@@ -270,46 +376,12 @@ h3 {
         display: block;
     }
 
-    .pref-label--container {
-        width: 20rem;
+    .pref-item,
+    .pref-selected,
+    .pref-multiselect,
+    .pref-footer button {
+        font-size: .9em;
     }
-
-    .pref-list--container {
-        -webkit-flex: 1;
-                flex: 1;
-        width: 100%;
-    }
-}
-
-/* ==========================================================================
-   States
-   ========================================================================== */
-
-.trigger-more {
-    position: absolute;
-    display: block;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    background-color: white;
-    background: linear-gradient(to bottom, transparent, white 30%);
-    padding-top: 2.4em;
-    padding-bottom: 2.4em;
-    opacity: 0;
-    visibility: hidden;
-}
-
-.has-more .trigger-more {
-    opacity: 1;
-    visibility: visible;
-}
-
-.has-more.is-open {
-    max-height: none;
-}
-.is-open .trigger-more {
-    opacity: 0;
-    visibility: hidden;
 }
 
 
@@ -334,6 +406,30 @@ h3 {
 
     to {
         opacity: 1;
+    }
+}
+
+@-webkit-keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(.4);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(.4);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
