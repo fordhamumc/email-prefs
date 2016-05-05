@@ -58,9 +58,14 @@ prefs.clickOff = function (e) {
     }
 };
 
+prefs.escapeOff = function () {
+    prefs.closeOptions(document.querySelector(".active .pref-list--toggle"));
+};
+
 prefs.closeOptions = function (listContainer) {
     prefs.updateSelected(listContainer);
     listContainer.removeEventListener("click", prefs.clickOff);
+    document.removeEventListener("keyup", prefs.escapeOff);
     document.body.classList.remove("modal-open");
     listContainer.parentElement.classList.remove("active");
 };
@@ -68,6 +73,7 @@ prefs.closeOptions = function (listContainer) {
 prefs.openOptions = function (listContainer) {
     document.body.classList.add("modal-open");
     listContainer.addEventListener("click", prefs.clickOff);
+    document.addEventListener("keyup", prefs.escapeOff);
     listContainer.classList.add("active");
     listContainer.querySelector(".pref-list").scrollTop = 0;
 };
