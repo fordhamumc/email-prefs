@@ -1,57 +1,63 @@
-function toggleMore(target) {
-    return target.classList.toggle("is-open");
-}
+"use strict";
+var prefs = {};
 
-function toggleCheckboxes(type, list) {
-    inputs = list.querySelectorAll('input');
-    Array.prototype.map.call(inputs, function(input) {
+prefs.toggleMore = function (target) {
+    return target.classList.toggle("is-open");
+};
+
+prefs.toggleCheckboxes = function (type, list) {
+    var inputs = list.querySelectorAll('input');
+    Array.prototype.map.call(inputs, function (input) {
         input.checked = type === 'all';
     });
-}
+};
 
-function addMoreLink(list) {
+prefs.addMoreLink = function (list) {
     var el = document.createElement("a");
     el.href = "#";
     el.className = "trigger-more pref-more";
     el.innerText = "+ More";
 
-    el.addEventListener("click", function(e) {
+    el.addEventListener("click", function (e) {
         e.preventDefault();
-        toggleMore(e.target.parentElement);
+        prefs.toggleMore(e.target.parentElement);
     });
     list.appendChild(el);
     list.classList.add("has-more");
-}
+};
 
-function addMultiSelects(label, list) {
-    var container = document.createElement("div");
-    container.className = "pref-multiselect";
+prefs.addMultiSelects = function (label, list) {
+    if (label.getElementsByClassName("pref-multiselect").length < 1) {
+        var options = ["all", "none"];
+        var container = document.createElement("div");
+        container.className = "pref-multiselect";
 
-    ["all", "none"].map(function(type) {
-        var el = document.createElement("a");
-        el.href = "#";
-        el.innerText = type;
+        options.map(function (type) {
+            var el = document.createElement("a");
+            el.href = "#";
+            el.innerText = type;
 
-        el.addEventListener("click", function(e) {
-            e.preventDefault();
-            toggleCheckboxes(type, list);
+            el.addEventListener("click", function (e) {
+                e.preventDefault();
+                prefs.toggleCheckboxes(type, list);
+            });
+
+            container.appendChild(el);
         });
+        label.appendChild(container);
+    }
+};
 
-        container.appendChild(el);
-    });
-    label.appendChild(container);
-}
-
-function watchTextInputChanges() {
-    textInputs = document.querySelectorAll(".input-text");
+prefs.watchTextInputChanges = function () {
+    var textInputs = document.querySelectorAll(".input-text");
     function isDirty(input) {
-        if(input.value) {
+        if (input.value) {
             input.offsetParent.classList.add("dirty");
         } else {
             input.offsetParent.classList.remove("dirty");
         }
     }
-    Array.prototype.map.call(textInputs, function(input) {
+    Array.prototype.map.call(textInputs, function (input) {
         isDirty(input);
         input.onfocus = function () {
             input.offsetParent.classList.add("focused");
@@ -59,24 +65,28 @@ function watchTextInputChanges() {
         input.onblur = function () {
             input.offsetParent.classList.remove("focused");
         };
-        input.addEventListener("keyup", function(e) {
+        input.addEventListener("keyup", function (e) {
             isDirty(e.target);
         });
     });
-}
+};
 
-(function () {
-    document.documentElement.className = "js";
+prefs.init = function () {
     var prefSection = document.getElementsByClassName("pref-section");
-    Array.prototype.map.call(prefSection, function(section) {
+    Array.prototype.map.call(prefSection, function (section) {
         var label = section.getElementsByClassName("pref-label--container")[0];
         var list = section.getElementsByClassName("pref-list--container")[0];
         if (label) {
-            addMultiSelects(label, list);
+            prefs.addMultiSelects(label, list);
         }
         if (list.firstElementChild.childElementCount > 8) {
-            addMoreLink(list);
+            prefs.addMoreLink(list);
         }
     });
-    watchTextInputChanges();
-})();
+    prefs.watchTextInputChanges();
+};
+
+(function () {
+    document.documentElement.className = "js";
+    prefs.init();
+}());
