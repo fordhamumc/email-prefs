@@ -16,7 +16,7 @@ prefs.addMultiSelects = function (list) {
         options.map(function (type) {
             var el = document.createElement("a");
             el.href = "#";
-            el.innerText = type;
+            el.textContent = type;
 
             el.addEventListener("click", function (e) {
                 e.preventDefault();
@@ -33,13 +33,13 @@ prefs.createOptionsContainer = function (list, label) {
     if (list.getElementsByClassName("pref-title").length < 1) {
         var header = document.createElement("h3");
         header.className = "pref-title";
-        header.innerText = label.innerText;
+        header.textContent = label.textContent;
         list.insertBefore(header, list.firstChild);
     }
 
     if (list.getElementsByClassName("pref-footer").length < 1) {
         var closeButton = document.createElement("button");
-        closeButton.innerText = "Close";
+        closeButton.textContent = "Close";
         closeButton.addEventListener("click", function (e) {
             e.preventDefault();
             prefs.closeOptions(list.parentElement);
@@ -81,7 +81,7 @@ prefs.openOptions = function (listContainer) {
 prefs.linkLabel = function (label, prefSections) {
     var link = document.createElement("a");
     link.href = "#";
-    link.innerText = label.innerText;
+    link.textContent = label.textContent;
     link.addEventListener("click", function (e) {
         var currentSection = label.parentElement;
         e.preventDefault();
@@ -90,7 +90,7 @@ prefs.linkLabel = function (label, prefSections) {
         });
         prefs.openOptions(currentSection);
     });
-    label.innerText = '';
+    label.textContent = '';
     label.appendChild(link);
 };
 
@@ -104,7 +104,7 @@ prefs.updateSelected = function (listContainer) {
     Array.prototype.map.call(selected, function (input, index) {
         var item = document.createElement("li");
         item.className = "pref-selected-item";
-        item.innerText = input.parentElement.innerText.trim() + ((index < selected.length - 1) ? ', ' : '');
+        item.textContent = input.parentElement.textContent.trim() + ((index < selected.length - 1) ? ', ' : '');
         container.appendChild(item);
     });
     parent.appendChild(container);
