@@ -16,7 +16,7 @@ prefs.addMoreLink = function (list) {
     var el = document.createElement("a");
     el.href = "#";
     el.className = "trigger-more pref-more";
-    el.innerText = "+ More";
+    el.textContent = "+ More";
 
     el.addEventListener("click", function (e) {
         e.preventDefault();
@@ -35,7 +35,7 @@ prefs.addMultiSelects = function (label, list) {
         options.map(function (type) {
             var el = document.createElement("a");
             el.href = "#";
-            el.innerText = type;
+            el.textContent = type;
 
             el.addEventListener("click", function (e) {
                 e.preventDefault();
