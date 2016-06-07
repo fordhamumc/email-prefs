@@ -1,0 +1,24 @@
+{
+  "name": "ibm-marketing-cloud-preferences",
+  "version": "0.1.0",
+  "description": "Use the IBM Marketing Cloud (formally Silverpop) API to populate preferences in a custom email preference form.",
+  "author": "Michael Foley",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "grunt": "^1.0.1",
+    "grunt-autoprefixer": "^3.0.4",
+    "grunt-babel": "^6.0.0",
+    "grunt-browser-sync": "^2.2.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-imagemin": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-php": "^1.5.1",
+    "load-grunt-tasks": "^3.5.0",
+    "time-grunt": "^1.3.0"
+  }
+}
