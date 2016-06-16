@@ -66,7 +66,8 @@ module.exports = function (grunt) {
                     cwd: '<%= paths.dev %>',
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
-                        '**/*.{html,php}'
+                        '**/*.{html,php}',
+                        '**/authData.ini'
                     ],
                     dest: '<%= paths.tmp %>'
                 }]
@@ -78,7 +79,8 @@ module.exports = function (grunt) {
                     cwd: '<%= paths.dev %>',
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
-                        '**/*.{html,php}'
+                        '**/*.{html,php}',
+                        '**/authData.ini'
                     ],
                     dest: '<%= paths.dist %>'
                 }]
