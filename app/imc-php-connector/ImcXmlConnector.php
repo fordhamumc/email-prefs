@@ -92,17 +92,18 @@ class ImcXmlConnector extends ImcBaseConnector {
 	 * @return SimpleXmlElement
 	 * @throws ImcConnectorException
 	 */
-	public function selectRecipientData($listId, $recipientId) {
-		if (!preg_match('/^\d+$/', $recipientId)) {
-			$recipientId = (int)$recipientId;
-		}
+	public function selectRecipientData($listId, $fidn, $email) {
 		if (!preg_match('/^\d+$/', $listId)) {
 			$listId = (int)$listId;
 		}
 
 		$params = "<SelectRecipientData>
 	<LIST_ID>{$listId}</LIST_ID>
-	<RECIPIENT_ID>{$recipientId}</RECIPIENT_ID>";
+	<EMAIL>{$email}</EMAIL>
+	<COLUMN>
+		<NAME>Fordham ID</NAME>
+		<VALUE>{$fidn}</VALUE>
+	</COLUMN>";
 		$params .= '</SelectRecipientData>';
 		$params = new SimpleXmlElement($params);
 
