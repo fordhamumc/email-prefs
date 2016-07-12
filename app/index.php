@@ -14,6 +14,7 @@ $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 $user = false;
 $role = "";
+$optOut = "no";
 $prefsList = array();
 
 if (substr($fidn, 1)) {
@@ -21,6 +22,11 @@ if (substr($fidn, 1)) {
         $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $fidn, $email)), true);
         $email = $user["EMAIL"];
         $role = get_column_value($user, 'Role');
+        $optOut = get_column_value($user, 'Fordham Opt Out');
+        if ($optOut === "yes" || $optOut === "Yes") {
+            $optOut = "yes";
+        }
+
     }
     catch (ImcConnectorException $sce) {
         $user = false;
@@ -98,43 +104,49 @@ foreach($options as $option) {
 </div>
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
-    If you prefer to not receive any emails from Fordham you can <a href="#">unsubscribe from all emails</a>.<br />
-        <small>*Faculty, students, and parents cannot unsubscribe from certain mandatory emails.</small>
-    </p>
-</header>
+</header> 
 <form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Preferences/Universal_Preferences" pageId="6224939" siteId="248719" parentPageId="6224937" >
     <div class="pref-container">
-        <?php
-        if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
+        <?php if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
         <section class="input-group">
             <h3 class="text-header">Email</h3>
             <div><?php echo $email; ?></div>
             <div><small>Students, faculty, and staff can update their email address through <a href="http://my.fordham.edu" target="_blank">my.fordham.edu</a>.</small></div>
             <input type="hidden" name="Email" value="<?php echo $email; ?>">
-        </section>
         <?php } else { ?>
-        <section class="input-group float-label--container">
-            <label class="float-label" for="email">Email</label>
-            <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
-        </section>
+        <section class="input-group">
+            <div class="float-label--container">
+                <label class="float-label" for="email">Email</label>
+                <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
+            </div>
         <?php } // end role match ?>
 
-        <?php foreach ($prefsList as &$pref) { ?>
-        <section id="<?php echo $pref->get_name(); ?>" role="group" class="pref-section input-group">
-            <div class="pref-label--container">
-                <h3 class="pref-label"><?php echo $pref->get_label(); ?></h3>
-            </div>
-            <div class="pref-list--container">
-                <div class="pref-list">
-                    <?php foreach ($pref->get_values() as &$value) {?>
-                    <label class="pref-item">
-                        <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
-                    </label>
-                    <?php } //End values Loop ?>
-                </div>
-            </div>
+        <?php if ($optOut === "yes") { ?>
+            <input type="hidden" value="No" name="Fordham Opt Out">
+        <?php } ?>
+            <label class="unsub-item">
+                <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if (preg_match('/\b(student|employee)\b/i', $role)) { echo "non-mandatory "; } ?>Fordham emails
+            </label>
         </section>
-        <?php } //End of $prefsList ?>
+
+        <div class="prefs">
+            <?php foreach ($prefsList as &$pref) { ?>
+            <section id="<?php echo $pref->get_name(); ?>" role="group" class="pref-section input-group">
+                <div class="pref-label--container">
+                    <h3 class="pref-label"><?php echo $pref->get_label(); ?></h3>
+                </div>
+                <div class="pref-list--container">
+                    <div class="pref-list">
+                        <?php foreach ($pref->get_values() as &$value) {?>
+                        <label class="pref-item">
+                            <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
+                        </label>
+                        <?php } //End values Loop ?>
+                    </div>
+                </div>
+            </section>
+            <?php } //End of $prefsList ?>
+        </div>
     </div>
 
     <footer class="form-footer">

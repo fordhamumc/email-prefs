@@ -1,6 +1,21 @@
 "use strict";
 var prefs = {};
 
+function debounce(func, wait, immediate) {
+    let timeout;
+    return function() {
+        const context = this, args = arguments;
+        const later = () => {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        const callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+}
+
 prefs.toggleMore = function (target) {
     return target.classList.toggle("is-open");
 };
@@ -70,6 +85,32 @@ prefs.watchTextInputChanges = function () {
         });
     });
 };
+prefs.watchUnsub = () => {
+    const elem = document.getElementById("input-unsub");
+    const prefsHeight = debounce(() => {
+        const prefs = document.querySelector(".prefs");
+        prefs.style.height = "auto";
+        prefs.style.height = prefs.scrollHeight + "px";
+    }, 250);
+
+    prefsHeight();
+
+    window.addEventListener('resize', prefsHeight);
+
+    if (elem.checked) {
+        elem.form.classList.add("is-unsub");
+    }
+    var isChecked = () => {
+        if (elem.checked) {
+            elem.form.classList.add("is-unsub","foldup");
+        } else {
+            elem.form.classList.remove("is-unsub","foldup");
+        }
+    };
+    elem.addEventListener("change", isChecked);
+};
+
+
 
 prefs.init = function () {
     var prefSection = document.getElementsByClassName("pref-section");
@@ -84,6 +125,7 @@ prefs.init = function () {
         }
     });
     prefs.watchTextInputChanges();
+    prefs.watchUnsub();
 };
 
 (function () {
