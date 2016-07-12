@@ -1,0 +1,64 @@
+[
+  {
+    "name": "Events",
+    "label": "Events",
+    "values": [
+      "Career",
+      "Cultural",
+      "Lectures",
+      "Performances",
+      "Receptions",
+      "Retreats",
+      "Reunions",
+      "Travel Program"
+    ]
+  },
+  {
+    "name": "Giving",
+    "label": "Giving",
+    "values": [
+      "Donor Recognition",
+      "Fordham Fund",
+      "Giving Day",
+      "School or Program Specific"
+    ]
+  },
+  {
+    "name": "Schools",
+    "label": "Schools",
+    "values": [
+      "Undergraduate",
+      "Graduate"
+    ]
+  },
+  {
+    "name": "Groups",
+    "label": "Groups",
+    "values": [
+      "Center on Religion and Culture",
+      "Curran Center for American Catholic Studies",
+      "Global Outreach",
+      "Veterans_ROTC",
+      "Mimes and Mummers",
+      "Orthodox Christian Studies Center",
+      "Wall Street Council"
+    ]
+  },
+  {
+    "name": "Marketing Newsletters",
+    "label": "Marketing Newsletters",
+    "values": [
+      "Alumni News",
+      "Fordham News",
+      "Fordham Magazine",
+      "Parents News"
+    ]
+  },
+  {
+    "name": "Athletics_maj_cat",
+    "label": "Athletics",
+    "values": [
+      "Athletics Events"
+    ]
+  }
+]

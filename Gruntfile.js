@@ -41,7 +41,7 @@ module.exports = function (grunt) {
         },
         watch: {
             files: {
-                files: ['<%= paths.dev %>/**/*.{php,html,png,jpg,jpeg,gif,svg}'],
+                files: ['<%= paths.dev %>/**/*.{ini,json,php,html,png,jpg,jpeg,gif,svg}'],
                 tasks: ['copy:dev']
             },
             sass: {
@@ -66,8 +66,7 @@ module.exports = function (grunt) {
                     cwd: '<%= paths.dev %>',
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
-                        '**/*.{html,php}',
-                        '**/authData.ini'
+                        '**/*.{html,php,ini,json}'
                     ],
                     dest: '<%= paths.tmp %>'
                 }]
@@ -79,8 +78,7 @@ module.exports = function (grunt) {
                     cwd: '<%= paths.dev %>',
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
-                        '**/*.{html,php}',
-                        '**/authData.ini'
+                        '**/*.{html,php,ini,json}'
                     ],
                     dest: '<%= paths.dist %>'
                 }]
