@@ -32,19 +32,6 @@
     ]
   },
   {
-    "name": "Groups",
-    "label": "Groups",
-    "values": [
-      "Center on Religion and Culture",
-      "Curran Center for American Catholic Studies",
-      "Global Outreach",
-      "Veterans_ROTC",
-      "Mimes and Mummers",
-      "Orthodox Christian Studies Center",
-      "Wall Street Council"
-    ]
-  },
-  {
     "name": "Marketing Newsletters",
     "label": "Marketing Newsletters",
     "values": [
