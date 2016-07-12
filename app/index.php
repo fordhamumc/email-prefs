@@ -54,14 +54,14 @@ class Preference {
         $userPrefs = false;
         if (!empty($user)) {
             $userPrefs = get_column_value($user, $this->name);
-            if ($userPrefs) {
+            if (is_string($userPrefs)) {
                 $userPrefs = explode(";", $userPrefs);
             }
         }
 
         $this->values = array_map(function($value) use($userPrefs) {
             return array("name" => $value,
-                         "checked" => (($userPrefs) ? in_array($value, $userPrefs) : true));
+                         "checked" => (($userPrefs === false) ? true : in_array($value, $userPrefs)));
         }, $values);
     }
 
