@@ -108,19 +108,17 @@ foreach($options as $option) {
 </header>
 <form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Email_Preferences/Form" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
-        <?php if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
-        <section class="input-group">
-            <h3 class="text-header">Email</h3>
-            <div><?php echo $email; ?></div>
-            <div><small>Students, faculty, and staff can update their email address through <a href="http://my.fordham.edu" target="_blank">my.fordham.edu</a>.</small></div>
-            <input type="hidden" name="Email" value="<?php echo $email; ?>">
-        <?php } else { ?>
-        <section class="input-group">
-            <div class="float-label--container">
-                <label class="float-label" for="email">Email</label>
-                <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
-            </div>
-        <?php } // end role match ?>
+        <section class="input-group info-section">
+            <?php if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
+                <h3 class="text-header">Email</h3>
+                <div><?php echo $email; ?></div>
+                <input type="hidden" name="Email" value="<?php echo $email; ?>">
+            <?php } else { ?>
+                <div class="float-label--container">
+                    <label class="float-label" for="email">Email</label>
+                    <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
+                </div>
+            <?php } // end role match ?>
             <label class="unsub-item">
                 <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if (preg_match('/\b(student|employee)\b/i', $role)) { echo "non-mandatory "; } ?>Fordham emails
             </label>

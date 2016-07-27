@@ -63,7 +63,7 @@ h3 {
 .container {
     max-width: 90rem;
     margin: 0 auto 5rem;
-    padding: 0 2rem;
+    padding: 0 5%;
 }
 
 
@@ -90,7 +90,11 @@ h3 {
    ========================================================================== */
 
 .input-group {
-    margin: 2rem 0 4rem;
+    margin: 0 0 3rem;
+
+    @media screen and (min-width: 35rem) {
+        margin-bottom: 4rem;
+    }
 }
 
 .input-text,
@@ -180,6 +184,21 @@ h3 {
 
 
 /* ==========================================================================
+   Info Section
+   ========================================================================== */
+
+
+.info-section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3rem;
+
+    @media screen and (min-width: 35rem) {
+        padding-bottom: 4rem;
+    }
+}
+
+
+/* ==========================================================================
    Preference Sections
    ========================================================================== */
 
@@ -253,7 +272,11 @@ h3 {
 }
 
 .pref-list {
-    padding-bottom: 1.4em;
+    padding-bottom: 2rem;
+
+    @media screen and (min-width: 35rem) {
+        padding-bottom: 3rem;
+    }
 }
 
 .pref-item {
@@ -296,7 +319,7 @@ h3 {
 
     .pref-label--container {
         width: 20rem;
-        padding-bottom: 2.4em;
+        padding-bottom: 4rem;
     }
 
     .pref-list--container {
