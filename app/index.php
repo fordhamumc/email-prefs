@@ -9,7 +9,7 @@ ImcConnector::getInstance()->authenticateRest(
     $credentials["imc"]["refresh_token"]
 );
 
-$fidn = "A" . filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
+$recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
 $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 $user = false;
@@ -17,12 +17,13 @@ $role = "";
 $optOut = "no";
 $prefsList = array();
 
-if (substr($fidn, 1)) {
+if (substr($recipientId, 1)) {
     try {
-        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $fidn, $email)), true);
+        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $email)), true);
         $email = $user["EMAIL"];
-        $role = get_column_value($user, 'Role');
+        $role = json_encode(get_column_value($user, 'Role'));
         $optOut = get_column_value($user, 'Fordham Opt Out');
+        $fidn = get_column_value($user, 'Fordham ID');
         if ($optOut === "yes" || $optOut === "Yes") {
             $optOut = "yes";
         }
@@ -72,8 +73,8 @@ class Preference {
     }
 
     function __construct($name, $label, $values, $user) {
-        $this->name = $name;
-        $this->label = $label;
+        $this->name     = $name;
+        $this->label    = $label;
         $this->set_values($values, $user);
     }
 }
@@ -104,8 +105,8 @@ foreach($options as $option) {
 </div>
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
-</header> 
-<form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Preferences/Universal_Preferences" pageId="6224939" siteId="248719" parentPageId="6224937" >
+</header>
+<form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Email_Preferences/Form" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
         <?php if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
         <section class="input-group">
@@ -120,10 +121,6 @@ foreach($options as $option) {
                 <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
             </div>
         <?php } // end role match ?>
-
-        <?php if ($optOut === "yes") { ?>
-            <input type="hidden" value="No" name="Fordham Opt Out">
-        <?php } ?>
             <label class="unsub-item">
                 <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if (preg_match('/\b(student|employee)\b/i', $role)) { echo "non-mandatory "; } ?>Fordham emails
             </label>
@@ -148,11 +145,10 @@ foreach($options as $option) {
             <?php } //End of $prefsList ?>
         </div>
     </div>
-
+    <input type="hidden" name="RECIPIENT_ID_*" value="<?php echo $recipientId ?>">
     <footer class="form-footer">
         <input type="submit" value="Update Your Preferences" class="btn">
     </footer>
-    <input type="hidden" name="Fordham ID" value="<?php echo $fidn; ?>">
     <input type="hidden" name="formSourceName" value="StandardForm">
     <!-- DO NOT REMOVE HIDDEN FIELD sp_exp -->
     <input type="hidden" name="sp_exp" value="yes">

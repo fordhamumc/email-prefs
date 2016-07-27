@@ -20,12 +20,12 @@ $result = ImcConnector::getInstance()->getListMetaData($credentials['imc']['data
 echo json_encode($result->KEY_COLUMNS, JSON_PRETTY_PRINT);
 
 echo "\n\nRetrieving recipient info...\n";
-$fidn = "A" . filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
+$recipientId = filter_input( INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT );
 $email = filter_input( INPUT_GET, 'email', FILTER_SANITIZE_EMAIL );
 
-if (substr($fidn, 1)) {
+if ($recipientId) {
 	try {
-		$result = ImcConnector::getInstance()->selectRecipientData($credentials['imc']['database_id'], $fidn, $email);
+		$result = ImcConnector::getInstance()->selectRecipientData($credentials['imc']['database_id'], $recipientId, $email);
 		echo json_encode($result, JSON_PRETTY_PRINT);
 	}
 	catch (ImcConnectorException $sce) {

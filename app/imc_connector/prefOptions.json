@@ -3,6 +3,7 @@
     "name": "Events",
     "label": "Events",
     "values": [
+      "Athletics",
       "Career",
       "Cultural",
       "Lectures",
@@ -17,35 +18,19 @@
     "name": "Giving",
     "label": "Giving",
     "values": [
-      "Donor Recognition",
-      "Fordham Fund",
-      "Giving Day",
-      "School or Program Specific"
-    ]
-  },
-  {
-    "name": "Schools",
-    "label": "Schools",
-    "values": [
-      "Undergraduate",
-      "Graduate"
+      "Giving"
     ]
   },
   {
     "name": "Marketing Newsletters",
-    "label": "Marketing Newsletters",
+    "label": "News",
     "values": [
-      "Alumni News",
-      "Fordham News",
+      "Alumni",
+      "Athletics",
       "Fordham Magazine",
-      "Parents News"
-    ]
-  },
-  {
-    "name": "Athletics_maj_cat",
-    "label": "Athletics",
-    "values": [
-      "Athletics Events"
+      "Fordham News",
+      "Parents",
+      "School Specific"
     ]
   }
 ]
