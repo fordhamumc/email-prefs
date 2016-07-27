@@ -96,10 +96,10 @@ h3 {
    ========================================================================== */
 
 .input-group {
-    margin: 0 0 3rem;
+    margin: 3rem 0;
 
     @media screen and (min-width: 35rem) {
-        margin-bottom: 4rem;
+        margin: 4rem 0;
     }
 }
 
@@ -190,26 +190,12 @@ h3 {
 
 
 /* ==========================================================================
-   Info Section
-   ========================================================================== */
-
-
-.info-section {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 3rem;
-
-    @media screen and (min-width: 35rem) {
-        padding-bottom: 4rem;
-    }
-}
-
-
-/* ==========================================================================
    Preference Sections
    ========================================================================== */
 
 
 .prefs {
+    border-top: 1px solid #ddd;
     transition: height .3s, opacity .3s;
     overflow: hidden;
 }
