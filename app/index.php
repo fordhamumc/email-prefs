@@ -15,6 +15,7 @@ $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 $user = false;
 $role = "";
 $optOut = "no";
+$isActive = false;
 $prefsList = array();
 
 if (substr($recipientId, 1)) {
@@ -23,7 +24,7 @@ if (substr($recipientId, 1)) {
         $email = $user["EMAIL"];
         $role = json_encode(get_column_value($user, 'Role'));
         $optOut = get_column_value($user, 'Fordham Opt Out');
-        $fidn = get_column_value($user, 'Fordham ID');
+        $isActive = preg_match('/\b(student_active|employee|nb_employee)\b/i', $role);
         if ($optOut === "yes" || $optOut === "Yes") {
             $optOut = "yes";
         }
@@ -110,7 +111,7 @@ foreach($options as $option) {
 <form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Email_Preferences/Form" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
         <section class="input-group info-section">
-            <?php if (preg_match('/\b(student|employee)\b/i', $role)) { ?>
+            <?php if ($isActive) { ?>
                 <h3 class="text-header">Email</h3>
                 <div><?php echo $email; ?></div>
                 <input type="hidden" name="Email" value="<?php echo $email; ?>">
@@ -121,7 +122,7 @@ foreach($options as $option) {
                 </div>
             <?php } // end role match ?>
             <label class="unsub-item">
-                <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if (preg_match('/\b(student|employee)\b/i', $role)) { echo "non-mandatory "; } ?>Fordham emails
+                <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if ($isActive) { echo "non-mandatory "; } ?>Fordham emails
             </label>
         </section>
 
