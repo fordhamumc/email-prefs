@@ -174,6 +174,26 @@ module.exports = function (grunt) {
                     '<%= paths.dist %>/js/main.js': ['<%= paths.tmp %>/js/main.js']
                 }
             }
+        },
+        filerev: {
+            options: {
+                length: 4
+            },
+            dist: {
+                files: [{
+                    src: [
+                        '<%= paths.dist %>/js/**/*.js',
+                        '<%= paths.dist %>/css/**/*.css',
+                        '<%= paths.dist %>/img/**/*.{gif,jpg,jpeg,png,svg,webp}'
+                    ]
+                }]
+            }
+        },
+        usemin: {
+            html: '<%= paths.dist %>/index.php',
+            options: {
+                assetsDirs: ['<%= paths.dist %>']
+            }
         }
 
     });
@@ -196,7 +216,9 @@ module.exports = function (grunt) {
         'sass:dist',
         'autoprefixer:dist',
         'babel',
-        'uglify'
+        'uglify',
+        'filerev',
+        'usemin'
     ]);
 
 
