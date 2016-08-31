@@ -18,7 +18,7 @@ $optOut = "no";
 $isActive = false;
 $prefsList = array();
 
-if (substr($recipientId, 1)) {
+if ($recipientId) {
     try {
         $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $email)), true);
         $email = $user["EMAIL"];
@@ -69,7 +69,7 @@ class Preference {
 
         $this->values = array_map(function($value) use($userPrefs) {
             return array("name" => $value,
-                         "checked" => (($userPrefs === false) ? true : in_array($value, $userPrefs)));
+                "checked" => (($userPrefs === false) ? true : in_array($value, $userPrefs)));
         }, $values);
     }
 
@@ -118,7 +118,7 @@ foreach($options as $option) {
             <?php } else { ?>
                 <div class="float-label--container">
                     <label class="float-label" for="email">Email</label>
-                    <input type="email" name="email" id="email" class="input-text" value="<?php echo $email; ?>" required>
+                    <input type="email" name="Email" id="email" class="input-text" value="<?php echo $email; ?>" required>
                 </div>
             <?php } // end role match ?>
             <label class="unsub-item">
@@ -128,20 +128,20 @@ foreach($options as $option) {
 
         <div class="prefs">
             <?php foreach ($prefsList as &$pref) { ?>
-            <section id="<?php echo $pref->get_name(); ?>" role="group" class="pref-section input-group">
-                <div class="pref-label--container">
-                    <h3 class="pref-label"><?php echo $pref->get_label(); ?></h3>
-                </div>
-                <div class="pref-list--container">
-                    <div class="pref-list">
-                        <?php foreach ($pref->get_values() as &$value) {?>
-                        <label class="pref-item">
-                            <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
-                        </label>
-                        <?php } //End values Loop ?>
+                <section id="<?php echo $pref->get_name(); ?>" role="group" class="pref-section input-group">
+                    <div class="pref-label--container">
+                        <h3 class="pref-label"><?php echo $pref->get_label(); ?></h3>
                     </div>
-                </div>
-            </section>
+                    <div class="pref-list--container">
+                        <div class="pref-list">
+                            <?php foreach ($pref->get_values() as &$value) {?>
+                                <label class="pref-item">
+                                    <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
+                                </label>
+                            <?php } //End values Loop ?>
+                        </div>
+                    </div>
+                </section>
             <?php } //End of $prefsList ?>
         </div>
     </div>
