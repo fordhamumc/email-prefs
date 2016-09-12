@@ -87,12 +87,12 @@ class ImcXmlConnector extends ImcBaseConnector {
 	 * Select a recipient in Imc.
 	 *
 	 * @param int   $listId      The ID of the recipient's database or list
-	 * @param int   $email       The email of the recipient
 	 * @param int   $recipientId The ID of the recipient to update
+     * @param int   $encodedId   The encoded ID of the recipient to update
 	 * @return SimpleXmlElement
 	 * @throws ImcConnectorException
 	 */
-	public function selectRecipientData($listId, $recipientId, $email) {
+	public function selectRecipientData($listId, $recipientId = null, $encodedId = null) {
 		if (!preg_match('/^\d+$/', $listId)) {
 			$listId = (int)$listId;
 		}
@@ -100,11 +100,15 @@ class ImcXmlConnector extends ImcBaseConnector {
 			$recipientId = (int)$recipientId;
 		}
 
+		if ( $recipientId > 0 ) {
+		    $idParam = "<RECIPIENT_ID>{$recipientId}</RECIPIENT_ID>";
+        } else {
+            $idParam = "<ENCODED_RECIPIENT_ID>{$encodedId}</ENCODED_RECIPIENT_ID>";
+        }
 
 		$params = "<SelectRecipientData>
 	<LIST_ID>{$listId}</LIST_ID>
-	<RECIPIENT_ID>{$recipientId}</RECIPIENT_ID>
-	<EMAIL>{$email}</EMAIL>";
+	{$idParam}";
 		$params .= '</SelectRecipientData>';
 		$params = new SimpleXmlElement($params);
 

@@ -10,6 +10,7 @@ ImcConnector::getInstance()->authenticateRest(
 );
 
 $recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
+$encodedId = filter_input( INPUT_GET, "eid", FILTER_SANITIZE_STRING );
 $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 $user = false;
@@ -17,13 +18,17 @@ $role = "";
 $optOut = "no";
 $isActive = false;
 $prefsList = array();
+$firstname = "";
+$lastname = "";
 
-if ($recipientId) {
+if ($recipientId || $encodedId) {
     try {
-        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $email)), true);
+        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $encodedId)), true);
         $email = $user["EMAIL"];
         $role = json_encode(get_column_value($user, 'Role'));
         $optOut = get_column_value($user, 'Fordham Opt Out');
+        $firstname = get_column_value($user, 'First Name');
+        $lastname = get_column_value($user, 'Last Name');
         $isActive = preg_match('/\b(student_active|employee|nb_employee)\b/i', $role);
         if ($optOut === "yes" || $optOut === "Yes") {
             $optOut = "yes";
@@ -108,7 +113,7 @@ foreach($options as $option) {
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
 </header>
-<form class="container" method="post" action="https://www.pages02.net/fordham-sugartest/Email_Preferences/Form" pageId="6430542" siteId="258941" parentPageId="6430540">
+<form class="container" method="post" action="submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
         <section class="input-group info-section">
             <?php if ($isActive) { ?>
@@ -145,7 +150,14 @@ foreach($options as $option) {
             <?php } //End of $prefsList ?>
         </div>
     </div>
-    <input type="hidden" name="RECIPIENT_ID_*" value="<?php echo $recipientId ?>">
+    <?php if ( isset( $recipientId ) ) {
+        echo "
+    <input type=\"hidden\" name=\"RECIPIENT_ID_*\" value=\"{$recipientId}\">";
+    } else {
+        echo "
+    <input type=\"hidden\" name=\"First Name\" value=\"{$firstname}\">
+    <input type=\"hidden\" name=\"Last Name\" value=\"{$lastname}\">";
+    } ?>
     <footer class="form-footer">
         <input type="submit" value="Update Your Preferences" class="btn">
     </footer>
