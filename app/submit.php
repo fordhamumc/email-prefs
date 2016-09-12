@@ -3,7 +3,14 @@ define("IMC_DIR", __DIR__."/imc_connector");
 $postdata = file_get_contents("php://input");
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 
-function check_for_none($haystack, $needle, $default = "None") {
+function get_field_value($needle, $haystack) {
+    if (preg_match("/{$needle}=(.+?)&/", $haystack, $m)) {
+        return urldecode($m[1]);
+    }
+    return false;
+}
+
+function check_for_none($needle, $haystack, $default = "None") {
     $needle = urlencode($needle);
     if (strpos($haystack, "{$needle}=") === false) {
         $haystack .= "&{$needle}={$default}";
@@ -11,10 +18,38 @@ function check_for_none($haystack, $needle, $default = "None") {
     return $haystack;
 }
 
-$postdata = check_for_none($postdata, "Fordham Opt Out");
+
+
+/* ==========================================================================
+   Set empty fields to 'None'
+   ========================================================================== */
+
+$postdata = check_for_none("Fordham Opt Out", $postdata);
 foreach($options as $option) {
-    $postdata = check_for_none($postdata, $option["name"]);
+    $postdata = check_for_none($option["name"], $postdata);
 }
+
+
+
+/* ==========================================================================
+   Update New_email field only if Email has changed
+   Email field is updated as well to allow for changes to apply instantly
+   in IMC
+   ========================================================================== */
+
+$email = get_field_value("Email", $postdata);
+$emailNew = get_field_value("EmailNew", $postdata);
+
+if ($email === $emailNew)
+    $emailNew = "None";
+
+$postdata .= "&New_email={$emailNew}";
+
+
+
+/* ==========================================================================
+   Send update to IMC
+   ========================================================================== */
 
 $curl_connection = curl_init("https://www.pages02.net/fordham-sugartest/Email_Preferences/Form");
 
@@ -40,6 +75,15 @@ if (curl_errno($curl_connection)) {
     }
 }
 
+//close the connection
+curl_close($curl_connection);
+
+
+
+/* ==========================================================================
+   Display error/success message
+   ========================================================================== */
+
 $header = (isset($error)) ? "An Error Has Occurred" : "Thank You";
 if (isset($error)) {
     $header = "An Error Has Occurred";
@@ -50,10 +94,6 @@ if (isset($error)) {
     $message = "<p>You have successfully updated your preferences.</p>
                 <p>Visit the <a href=\"http://fordham.edu\">Fordham Homepage.</a></p>";
 }
-
-//close the connection
-curl_close($curl_connection);
-
 
 include_once "inc/header.php";
 ?>

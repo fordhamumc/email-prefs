@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/New_York');
 define("IMC_DIR", __DIR__."/imc_connector");
 require_once IMC_DIR."/ImcConnector.php";
 $credentials = parse_ini_file(IMC_DIR."/authData.ini", true);
@@ -24,7 +25,12 @@ $lastname = "";
 if ($recipientId || $encodedId) {
     try {
         $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $encodedId)), true);
+        $lastModified = strtotime($user['LastModified']);
         $email = $user["EMAIL"];
+        $newEmail = get_column_value($user, 'New_email');
+        if ( strtotime($user['LastModified']) < strtotime("+1 week") && filter_var($newEmail, FILTER_VALIDATE_EMAIL)  ) {
+            $email = $newEmail;
+        }
         $role = json_encode(get_column_value($user, 'Role'));
         $optOut = get_column_value($user, 'Fordham Opt Out');
         $firstname = get_column_value($user, 'First Name');
@@ -39,7 +45,6 @@ if ($recipientId || $encodedId) {
         $user = false;
     }
 }
-
 function get_column_value($user, $name) {
     return array_values(array_filter($user["COLUMNS"]["COLUMN"], function($item) use($name) {
         return $item["NAME"] == $name;
@@ -98,14 +103,14 @@ include_once "inc/header.php";
 <form class="container" method="post" action="submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
         <section class="input-group info-section">
+            <input type="hidden" name="Email" value="<?php echo $user["EMAIL"]; ?>">
             <?php if ($isActive) { ?>
                 <h3 class="text-header">Email</h3>
                 <div><?php echo $email; ?></div>
-                <input type="hidden" name="Email" value="<?php echo $email; ?>">
             <?php } else { ?>
                 <div class="float-label--container">
                     <label class="float-label" for="email">Email</label>
-                    <input type="email" name="Email" id="email" class="input-text" value="<?php echo $email; ?>" required>
+                    <input type="email" name="EmailNew" id="email" class="input-text" value="<?php echo $email; ?>" required>
                 </div>
             <?php } // end role match ?>
             <label class="unsub-item">
@@ -147,5 +152,5 @@ include_once "inc/header.php";
     <!-- DO NOT REMOVE HIDDEN FIELD sp_exp -->
     <input type="hidden" name="sp_exp" value="yes">
 </form>
-<?
+<?php
 include_once "inc/footer.php"; ?>
