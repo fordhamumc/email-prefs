@@ -30,10 +30,37 @@ curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $postdata);
 //perform our request
 $result = curl_exec($curl_connection);
 
-//show information regarding the request
-print_r(curl_getinfo($curl_connection));
-echo curl_errno($curl_connection) . '-' .
-    curl_error($curl_connection);
+//success/error messages
+if (curl_errno($curl_connection)) {
+    $error = "Couldn't send request: " . curl_error($curl_connection);
+} else {
+    $resultStatus = curl_getinfo($curl_connection, CURLINFO_HTTP_CODE);
+    if ($resultStatus != 200) {
+        $error = "Request failed: HTTP status code: {$resultStatus}";
+    }
+}
+
+$header = (isset($error)) ? "An Error Has Occurred" : "Thank You";
+if (isset($error)) {
+    $header = "An Error Has Occurred";
+    $message = "<p class='error'>{$error}</p>
+                <p>To update your preferences, contact <a href='mailto:emailmarketing@fordham.edu'>emailmarketing@fordham.edu</a>.</p>";
+} else {
+    $header = "Thank You";
+    $message = "<p>You have successfully updated your preferences.</p>
+                <p>Visit the <a href=\"http://fordham.edu\">Fordham Homepage.</a></p>";
+}
 
 //close the connection
 curl_close($curl_connection);
+
+
+include_once "inc/header.php";
+?>
+
+<header class="intro container">
+    <h1 class="intro-heading"><?php echo $header; ?></h1>
+</header>
+<div class="container"><?php echo $message; ?></div>
+<?php
+include_once "inc/footer.php"; ?>

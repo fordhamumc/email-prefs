@@ -90,26 +90,8 @@ foreach($options as $option) {
     array_push($prefsList, new Preference($option["name"], $option["label"], $option["values"], $user));
 }
 
+include_once "inc/header.php";
 ?>
-<!doctype html>
-<html class="no-js" lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Set Your Email Preferences</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" type="text/css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="css/main.css" type="text/css">
-</head>
-<body>
-<div class="container logo">
-    <a href="http://fordham.edu">
-        <img src="img/fordham.png" width="165" alt="Fordham University">
-    </a>
-</div>
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
 </header>
@@ -165,6 +147,5 @@ foreach($options as $option) {
     <!-- DO NOT REMOVE HIDDEN FIELD sp_exp -->
     <input type="hidden" name="sp_exp" value="yes">
 </form>
-<script type="text/javascript" src="js/main.js"></script>
-</body>
-</html>
+<?
+include_once "inc/footer.php"; ?>
