@@ -190,7 +190,7 @@ module.exports = function (grunt) {
             }
         },
         usemin: {
-            html: '<%= paths.dist %>/index.php',
+            html: ['<%= paths.dist %>/index.php', '<%= paths.dist %>/inc/**/*.php'],
             options: {
                 assetsDirs: ['<%= paths.dist %>']
             }
