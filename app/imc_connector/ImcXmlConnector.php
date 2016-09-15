@@ -83,12 +83,71 @@ class ImcXmlConnector extends ImcBaseConnector {
 		return $result->Body->RESULT;
 	}
 
-	/**
+    /**
+     * Update a recipient in IMC.
+     *
+     * @param int    $listId      The ID of the recipient's list
+     * @param int    $recipientId The ID of the recipient to update
+     * @param string $encodedId   The Encoded ID of the recipient to update
+     * @param array  $fields      An associative array of keys and values to update
+     * @param array  $syncFields  An associative array of keys and values to lookup a contact if $recipientId and $encodedId are missing
+     * @param array  $optParams   An associative array of optional parameters
+     * @return SimpleXmlElement
+     * @throws SilverpopConnectorException
+     */
+    public function updateRecipient($listId, $recipientId = null, $encodedId = null, $fields, $syncFields=array(), $optParams=array()) {
+        if (!preg_match('/^\d+$/', $listId)) {
+            $listId = (int)$listId;
+        }
+        if (!preg_match('/^\d+$/', $recipientId)) {
+            $recipientId = (int)$recipientId;
+        }
+
+        $idParam = "";
+        if ( $recipientId ) {
+            $idParam = "<RECIPIENT_ID>{$recipientId}</RECIPIENT_ID>";
+        } else if ( $encodedId ) {
+            $idParam = "<ENCODED_RECIPIENT_ID>{$encodedId}</ENCODED_RECIPIENT_ID>";
+        }
+        $params = "<UpdateRecipient>
+	<LIST_ID>{$listId}</LIST_ID>
+	{$idParam}\n";
+        foreach ($optParams as $key => $value) {
+            $params .= "\t<{$key}>{$value}</{$key}>\n";
+        }
+        if (!$recipientId && !$encodedId) {
+            $params .= "<SYNC_FIELDS>\n";
+            foreach ($syncFields as $key => $value) {
+                $params .= "\t<SYNC_FIELD>\n";
+                $params .= "\t\t<NAME>{$key}</NAME>\n";
+                $params .= "\t\t<VALUE>{$value}</VALUE>\n";
+                $params .= "\t</SYNC_FIELD>\n";
+            }
+            $params .= "</SYNC_FIELDS>\n";
+        }
+
+        foreach ($fields as $key => $value) {
+            $params .= "\t<COLUMN>\n";
+            $params .= "\t\t<NAME>{$key}</NAME>\n";
+            $params .= "\t\t<VALUE>{$value}</VALUE>\n";
+            $params .= "\t</COLUMN>\n";
+        }
+        $params .= '</UpdateRecipient>';
+        $params = new SimpleXmlElement($params);
+        $result = $this->post($params);
+        $recipientId = $result->Body->RESULT->RecipientId;
+        if (!preg_match('/^\d+$/', $recipientId)) {
+            $recipientId = (int)$recipientId;
+        }
+        return $recipientId;
+    }
+
+    /**
 	 * Select a recipient in Imc.
 	 *
-	 * @param int   $listId      The ID of the recipient's database or list
-	 * @param int   $recipientId The ID of the recipient to update
-     * @param int   $encodedId   The encoded ID of the recipient to update
+	 * @param int    $listId      The ID of the recipient's database or list
+	 * @param int    $recipientId The ID of the recipient
+     * @param string $encodedId   The encoded ID of the recipient
 	 * @return SimpleXmlElement
 	 * @throws ImcConnectorException
 	 */

@@ -1,40 +1,29 @@
 <?php
-date_default_timezone_set('America/New_York');
-define("IMC_DIR", __DIR__."/imc_connector");
-require_once IMC_DIR."/ImcConnector.php";
-$credentials = parse_ini_file(IMC_DIR."/authData.ini", true);
-ImcConnector::getInstance($credentials["imc"]["baseUrl"]);
-ImcConnector::getInstance()->authenticateRest(
-    $credentials["imc"]["client_id"],
-    $credentials["imc"]["client_secret"],
-    $credentials["imc"]["refresh_token"]
-);
+include_once "inc/header.php";
 
 $recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
 $encodedId = filter_input( INPUT_GET, "eid", FILTER_SANITIZE_STRING );
 $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
-$options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
+
 $user = false;
 $role = "";
 $optOut = "no";
 $isActive = false;
 $prefsList = array();
-$firstname = "";
-$lastname = "";
+
 
 if ($recipientId || $encodedId) {
     try {
         $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $encodedId)), true);
         $lastModified = strtotime($user['LastModified']);
         $email = $user["EMAIL"];
-        $newEmail = get_column_value($user, 'New_email');
-        if ( strtotime($user['LastModified']) < strtotime("+1 week") && filter_var($newEmail, FILTER_VALIDATE_EMAIL)  ) {
+        $newEmail = filter_var(get_column_value($user, 'New_email'), FILTER_VALIDATE_EMAIL);
+
+        if ( strtotime($user['LastModified']) < strtotime("+1 week") && $newEmail  ) {
             $email = $newEmail;
         }
         $role = json_encode(get_column_value($user, 'Role'));
         $optOut = get_column_value($user, 'Fordham Opt Out');
-        $firstname = get_column_value($user, 'First Name');
-        $lastname = get_column_value($user, 'Last Name');
         $isActive = preg_match('/\b(student_active|employee|nb_employee)\b/i', $role);
         if ($optOut === "yes" || $optOut === "Yes") {
             $optOut = "yes";
@@ -95,7 +84,6 @@ foreach($options as $option) {
     array_push($prefsList, new Preference($option["name"], $option["label"], $option["values"], $user));
 }
 
-include_once "inc/header.php";
 ?>
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
@@ -110,7 +98,7 @@ include_once "inc/header.php";
             <?php } else { ?>
                 <div class="float-label--container">
                     <label class="float-label" for="email">Email</label>
-                    <input type="email" name="EmailNew" id="email" class="input-text" value="<?php echo $email; ?>" required>
+                    <input type="email" name="New_email" id="email" class="input-text" value="<?php echo $email; ?>" required>
                 </div>
             <?php } // end role match ?>
             <label class="unsub-item">
@@ -128,7 +116,7 @@ include_once "inc/header.php";
                         <div class="pref-list">
                             <?php foreach ($pref->get_values() as &$value) {?>
                                 <label class="pref-item">
-                                    <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
+                                    <input class="pref-selector" type="checkbox" name="<?php echo $pref->get_name(); ?>[]" value="<?php echo $value["name"] ?>" <?php if($value["checked"]) {echo "checked";} ?>><?php echo $value["name"] ?>
                                 </label>
                             <?php } //End values Loop ?>
                         </div>
@@ -137,14 +125,6 @@ include_once "inc/header.php";
             <?php } //End of $prefsList ?>
         </div>
     </div>
-    <?php if ( isset( $recipientId ) ) {
-        echo "
-    <input type=\"hidden\" name=\"RECIPIENT_ID_*\" value=\"{$recipientId}\">";
-    } else {
-        echo "
-    <input type=\"hidden\" name=\"First Name\" value=\"{$firstname}\">
-    <input type=\"hidden\" name=\"Last Name\" value=\"{$lastname}\">";
-    } ?>
     <footer class="form-footer">
         <input type="submit" value="Update Your Preferences" class="btn">
     </footer>
@@ -152,5 +132,10 @@ include_once "inc/header.php";
     <!-- DO NOT REMOVE HIDDEN FIELD sp_exp -->
     <input type="hidden" name="sp_exp" value="yes">
 </form>
+
 <?php
-include_once "inc/footer.php"; ?>
+include_once "inc/footer.php";
+
+$_SESSION["recipientId"] = $recipientId;
+$_SESSION["encodedId"] = $encodedId;
+?>

@@ -1,3 +1,19 @@
+<?php
+session_start();
+date_default_timezone_set('America/New_York');
+define("IMC_DIR", __DIR__."/../imc_connector");
+require_once IMC_DIR."/ImcConnector.php";
+$options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
+$credentials = parse_ini_file(IMC_DIR."/authData.ini", true);
+
+ImcConnector::getInstance($credentials["imc"]["baseUrl"]);
+ImcConnector::getInstance()->authenticateRest(
+    $credentials["imc"]["client_id"],
+    $credentials["imc"]["client_secret"],
+    $credentials["imc"]["refresh_token"]
+);
+
+?>
 <!doctype html>
 <html class="no-js" lang="en">
 <head>

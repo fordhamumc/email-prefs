@@ -1,83 +1,57 @@
 <?php
-define("IMC_DIR", __DIR__."/imc_connector");
-$postdata = file_get_contents("php://input");
-$options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
-
-function get_field_value($needle, $haystack) {
-    if (preg_match("/{$needle}=(.+?)&/", $haystack, $m)) {
-        return urldecode($m[1]);
-    }
-    return false;
-}
-
-function check_for_none($needle, $haystack, $default = "None") {
-    $needle = urlencode($needle);
-    if (strpos($haystack, "{$needle}=") === false) {
-        $haystack .= "&{$needle}={$default}";
-    }
-    return $haystack;
-}
-
+include_once "inc/header.php";
+$recipientId = $_SESSION["recipientId"];
+$encodedId = $_SESSION["encodedId"];
+$fields = array();
 
 
 /* ==========================================================================
-   Set empty fields to 'None'
+   Update IMC Database
    ========================================================================== */
 
-$postdata = check_for_none("Fordham Opt Out", $postdata);
+function set_field($name, &$fields) {
+    $nameEncoded = preg_replace('/\s+/', '_', $name);
+
+    $fields[$name] = "None";
+    if ( array_key_exists($nameEncoded, $_POST) ) {
+        if ( is_array( $_POST[$nameEncoded] ) ) {
+            $fields[$name] = implode(";", $_POST[$nameEncoded]);
+        } else {
+            $fields[$name] = $_POST[$nameEncoded];
+        }
+    }
+}
+
+// Add preference fields to fields array
 foreach($options as $option) {
-    $postdata = check_for_none($option["name"], $postdata);
+    set_field($option["name"], $fields);
 }
 
+// Add global opt out to fields array
+set_field("Fordham Opt Out", $fields);
 
-
-/* ==========================================================================
-   Update New_email field only if Email has changed
-   Email field is updated as well to allow for changes to apply instantly
-   in IMC
-   ========================================================================== */
-
-$email = get_field_value("Email", $postdata);
-$emailNew = get_field_value("EmailNew", $postdata);
-
-if ($email === $emailNew)
-    $emailNew = "None";
-
-$postdata .= "&New_email={$emailNew}";
-
-
-
-/* ==========================================================================
-   Send update to IMC
-   ========================================================================== */
-
-$curl_connection = curl_init("https://www.pages02.net/fordham-sugartest/Email_Preferences/Form");
-
-curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
-curl_setopt($curl_connection, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
-curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, true);
-curl_setopt($curl_connection, CURLOPT_FOLLOWLOCATION, 1);
-
-//set data to be posted
-curl_setopt($curl_connection, CURLOPT_POSTFIELDS, $postdata);
-
-//perform our request
-$result = curl_exec($curl_connection);
-
-//success/error messages
-if (curl_errno($curl_connection)) {
-    $error = "Couldn't send request: " . curl_error($curl_connection);
-} else {
-    $resultStatus = curl_getinfo($curl_connection, CURLINFO_HTTP_CODE);
-    if ($resultStatus != 200) {
-        $error = "Request failed: HTTP status code: {$resultStatus}";
+// Add a new email if it is a valid email and is different from the current email
+$fields["New_email"] = "None";
+if ( array_key_exists("New_email", $_POST) ) {
+    if ( $_POST["New_email"] !== $_POST["Email"] && filter_var($_POST["New_email"], FILTER_VALIDATE_EMAIL) ) {
+        $fields["New_email"] = $_POST["New_email"];
     }
 }
 
-//close the connection
-curl_close($curl_connection);
+// Add Sync Field to look up record when both the recipientId and EncodedId are missing
+$syncFields = array();
+if (!$recipientId && !$encodedId) {
+    $fields["Email"] = $_POST["New_email"];
+    $syncFields["Email"] = $_POST["New_email"];
+}
 
+// Send the update to IMC
+try {
+    $user = json_decode(json_encode(ImcConnector::getInstance()->updateRecipient($credentials["imc"]["database_id"], $recipientId, $encodedId, $fields, $syncFields)), true);
+}
+catch (ImcConnectorException $sce) {
+    $error = "We are having trouble updating your information.";
+}
 
 
 /* ==========================================================================
@@ -88,7 +62,7 @@ $header = (isset($error)) ? "An Error Has Occurred" : "Thank You";
 if (isset($error)) {
     $header = "An Error Has Occurred";
     $message = "<p class='error'>{$error}</p>
-                <p>To update your preferences, contact <a href='mailto:emailmarketing@fordham.edu'>emailmarketing@fordham.edu</a>.</p>";
+                <p>Please contact <a href='mailto:emailmarketing@fordham.edu'>emailmarketing@fordham.edu</a>.</p>";
 } else {
     $header = "Thank You";
     $message = "<p>You have successfully updated your preferences.</p>
