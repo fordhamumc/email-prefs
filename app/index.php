@@ -1,16 +1,36 @@
 <?php
 include_once "inc/header.php";
 
+/**
+ * Set defaults
+ *
+ * @param int    $recipientId   The ID of the recipient to update
+ * @param string $encodedId     The Encoded ID of the recipient to update
+ * @param string $email         The Email address of the user (only used if $recipientId and $encodedId are blank
+ * @param array  $user          An associative array of user data returned from IMC
+ * @param string $role          A custom IMC field containing roles associated with the user
+ * @param string $optOut        The Opt Out status of the user
+ * @param string $isActive      A field indicating if the user is an active Employee or Student
+ * @param array  $prefsList     An array of Preference objects identifying the previously set preferences of the user
+ **/
+
 $recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
 $encodedId = filter_input( INPUT_GET, "eid", FILTER_SANITIZE_STRING );
 $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
 
-$user = false;
+$user = array();
 $role = "";
 $optOut = "no";
 $isActive = false;
 $prefsList = array();
 
+
+/**
+ * Get user preferences
+ *
+ * If either the recipient id or the encoded recipient id is provided this will fetch the user preferences and set the
+ * above defaults to the user's settings
+ **/
 
 if ($recipientId || $encodedId) {
     try {
@@ -31,14 +51,30 @@ if ($recipientId || $encodedId) {
 
     }
     catch (ImcConnectorException $sce) {
-        $user = false;
+        $user = array();
     }
 }
+
+
+/**
+ * Get column value
+ *
+ * A function that queries the $user object's list of IMC fields for the desired field name and
+ * returns the value of that field
+ **/
+
 function get_column_value($user, $name) {
     return array_values(array_filter($user["COLUMNS"]["COLUMN"], function($item) use($name) {
         return $item["NAME"] == $name;
     }))[0]["VALUE"];
 }
+
+
+/**
+ * Set preferences
+ *
+ * Loops over each preference field in the $options list and checks to see if the user has that preference checked.
+ **/
 
 class Preference {
     private $name;

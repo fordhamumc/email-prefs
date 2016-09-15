@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * Defaults for all pages
+ *
+ * @param array  $options       An associative array preference options
+ * @param array  $credentials   An associative array containing the connection parameters for IMC
+ **/
+
 session_start();
 date_default_timezone_set('America/New_York');
 define("IMC_DIR", __DIR__."/../imc_connector");

@@ -5,9 +5,15 @@ $encodedId = $_SESSION["encodedId"];
 $fields = array();
 
 
-/* ==========================================================================
-   Update IMC Database
-   ========================================================================== */
+/**
+ * Prep the update to send to IMC
+ *
+ * Loops through all of the preference fields
+ * Checks if they are empty and if so adds a 'None' value for that field
+ * Adds Global Opt Out field: Yes/None
+ * Checks if the email field has been updated and if so sets the New_email field
+ * If not it sets New_email to 'None'
+**/
 
 function set_field($name, &$fields) {
     $nameEncoded = preg_replace('/\s+/', '_', $name);
@@ -45,7 +51,14 @@ if (!$recipientId && !$encodedId) {
     $syncFields["Email"] = $_POST["New_email"];
 }
 
-// Send the update to IMC
+
+/**
+ * Send the update to IMC
+ *
+ * If successful returns recipient_id
+ * If an error occurs, it populates an error message
+ **/
+
 try {
     $user = json_decode(json_encode(ImcConnector::getInstance()->updateRecipient($credentials["imc"]["database_id"], $recipientId, $encodedId, $fields, $syncFields)), true);
 }
@@ -54,9 +67,12 @@ catch (ImcConnectorException $sce) {
 }
 
 
-/* ==========================================================================
-   Display error/success message
-   ========================================================================== */
+/**
+ * Display response
+ *
+ * Displays success or error message to the user.
+ * If an error occurs, it instructs the user who to contact.
+ **/
 
 $header = (isset($error)) ? "An Error Has Occurred" : "Thank You";
 if (isset($error)) {
