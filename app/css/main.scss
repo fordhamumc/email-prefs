@@ -66,6 +66,14 @@ h3 {
     font-size: 1.17em;
 }
 
+
+[type=submit],
+[type=reset],
+button,
+html [type=button]{
+    cursor: pointer;
+}
+
 .container {
     max-width: 90rem;
     margin: 0 auto 5rem;
@@ -78,7 +86,6 @@ h3 {
    ========================================================================== */
 
 .btn {
-    font-size: 1.2em;
     padding: .4em 2em;
     border-radius: 4px;
     letter-spacing: .03em;
@@ -88,6 +95,16 @@ h3 {
     color: #ffffff;
     border: 1px solid #5d001a;
     text-decoration: none;
+    transition: background .3s;
+    white-space: pre-wrap;
+
+    &:hover {
+        background: darken(#900028, 3%);
+    }
+
+    @media screen and (min-width: 35rem) {
+        font-size: 1.2em;
+    }
 }
 
 
@@ -165,6 +182,25 @@ h3 {
 .form-footer {
     text-align: center;
     width: 100%;
+}
+
+
+/* ==========================================================================
+   Intro
+   ========================================================================== */
+
+.alert {
+    background: #6d9297;
+    text-align: center;
+
+    a {
+        display: block;
+        padding: .5rem 1rem;
+        color: white;
+    }
+    span {
+        text-decoration: underline;
+    }
 }
 
 
