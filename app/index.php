@@ -123,6 +123,7 @@ foreach($options as $option) {
 ?>
 <header class="intro container">
     <h1 class="intro-heading">Set Your Email Preferences</h1>
+    <div>Uncheck the types of emails you are not interested in receiving.</div>
 </header>
 <form class="container" method="post" action="submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
@@ -141,7 +142,6 @@ foreach($options as $option) {
                 <input id="input-unsub" type="checkbox" value="Yes" <?php if ($optOut === "yes") { echo "checked"; } ?> name="Fordham Opt Out"> Unsubscribe from all <?php if ($isActive) { echo "non-mandatory "; } ?>Fordham emails
             </label>
         </section>
-
         <div class="prefs">
             <?php foreach ($prefsList as &$pref) { ?>
                 <section id="<?php echo $pref->get_name(); ?>" role="group" class="pref-section input-group">
