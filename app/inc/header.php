@@ -13,7 +13,7 @@ date_default_timezone_set('America/New_York');
 define("IMC_DIR", __DIR__."/../imc_connector");
 
 $qa = filter_input( INPUT_GET, "qa", FILTER_SANITIZE_NUMBER_INT );
-if ($qa !== null) $_SESSION["qa"] = $qa;
+if ($qa !== null || !array_key_exists("qa", $_SESSION)) $_SESSION["qa"] = $qa;
 
 require_once IMC_DIR."/ImcConnector.php";
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
