@@ -1,7 +1,10 @@
 <?php
 include_once "inc/header.php";
+include_once "mailer/mailer.php";
 $recipientId = $_SESSION["recipientId"];
 $encodedId = $_SESSION["encodedId"];
+$fidn = $_SESSION["fidn"];
+$name = $_SESSION["name"];
 $fields = array();
 
 
@@ -85,9 +88,18 @@ if (isset($error)) {
                 <p>Visit the <a href=\"http://fordham.edu\">Fordham Homepage.</a></p>";
 }
 
-include_once "inc/header.php";
-?>
 
+/**
+ * Update new email
+ **/
+
+$email = "";
+if (array_key_exists("New_email", $fields)) {
+    $email =  $fields["New_email"];
+}
+mailer($name, $email, $fidn);
+
+?>
 <header class="intro container">
     <h1 class="intro-heading"><?php echo $header; ?></h1>
 </header>

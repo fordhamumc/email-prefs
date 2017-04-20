@@ -1,0 +1,5 @@
+[mailer]
+to          = ""
+from        = ""
+fromName    = ""
+subject     = ""

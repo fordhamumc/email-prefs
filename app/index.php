@@ -9,6 +9,8 @@ include_once "inc/header.php";
  * @param string $email         The Email address of the user (only used if $recipientId and $encodedId are blank
  * @param array  $user          An associative array of user data returned from IMC
  * @param string $role          A custom IMC field containing roles associated with the user
+ * @param string $fidn          A custom IMC field containing the Fordham ID of the user
+ * @param string $name          A concatenated field of the first and last names
  * @param string $optOut        The Opt Out status of the user
  * @param string $isActive      A field indicating if the user is an active Employee or Student
  * @param array  $prefsList     An array of Preference objects identifying the previously set preferences of the user
@@ -20,6 +22,8 @@ $email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
 
 $user = array();
 $role = "";
+$fidn = "";
+$name = "";
 $optOut = "no";
 $isActive = false;
 $prefsList = array();
@@ -43,6 +47,8 @@ if ($recipientId || $encodedId) {
             $email = $newEmail;
         }
         $role = json_encode(get_column_value($user, 'Role'));
+        $fidn = get_column_value($user, 'Fordham ID');
+        $name = get_column_value($user, 'First Name') . " " . get_column_value($user, 'Last Name');
         $optOut = get_column_value($user, 'Fordham Opt Out');
         $isActive = preg_match('/\b(student_active|employee|nb_employee)\b/i', $role);
         if ($optOut === "yes" || $optOut === "Yes") {
@@ -174,4 +180,6 @@ include_once "inc/footer.php";
 
 $_SESSION["recipientId"] = $recipientId;
 $_SESSION["encodedId"] = $encodedId;
+$_SESSION["fidn"] = $fidn;
+$_SESSION["name"] = $name;
 ?>
