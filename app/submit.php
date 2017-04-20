@@ -40,10 +40,12 @@ foreach($options as $option) {
 set_field("Fordham Opt Out", $fields);
 
 // Add a new email if it is a valid email and is different from the current email
-$fields["New_email"] = "None";
 if ( array_key_exists("New_email", $_POST) ) {
     if ( $_POST["New_email"] !== $_POST["Email"] && filter_var($_POST["New_email"], FILTER_VALIDATE_EMAIL) ) {
         $fields["New_email"] = $_POST["New_email"];
+    }
+    if ( $_POST["New_email"] === $_SESSION["user_email"]) {
+        $fields["New_email"] = "None";
     }
 }
 

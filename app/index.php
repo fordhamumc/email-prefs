@@ -6,7 +6,9 @@ include_once "inc/header.php";
  *
  * @param int    $recipientId   The ID of the recipient to update
  * @param string $encodedId     The Encoded ID of the recipient to update
- * @param string $email         The Email address of the user (only used if $recipientId and $encodedId are blank
+ * @param string $emailCurrent  The current Email address in IMC for the user
+ * @param string $emailInput    The Email address supplied by URL parameter
+ * @param string $email         The Email address of the user
  * @param array  $user          An associative array of user data returned from IMC
  * @param string $role          A custom IMC field containing roles associated with the user
  * @param string $fidn          A custom IMC field containing the Fordham ID of the user
@@ -18,9 +20,11 @@ include_once "inc/header.php";
 
 $recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
 $encodedId = filter_input( INPUT_GET, "eid", FILTER_SANITIZE_STRING );
-$email = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
+$emailInput = filter_input( INPUT_GET, "email", FILTER_SANITIZE_EMAIL );
+$email = $emailInput;
 
 $user = array();
+$emailCurrent = "";
 $role = "";
 $fidn = "";
 $name = "";
@@ -40,8 +44,12 @@ if ($recipientId || $encodedId) {
     try {
         $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $encodedId)), true);
         $lastModified = strtotime($user['LastModified']);
-        $email = $user["EMAIL"];
+        $emailCurrent = $user["EMAIL"];
         $newEmail = filter_var(get_column_value($user, 'New_email'), FILTER_VALIDATE_EMAIL);
+
+        if (!$email) {
+            $email = $user["EMAIL"];
+        }
 
         if ( strtotime($user['LastModified']) < strtotime("+1 week") && $newEmail  ) {
             $email = $newEmail;
@@ -134,10 +142,10 @@ foreach($options as $option) {
 <form class="container" method="post" action="submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
         <section class="input-group info-section">
-            <input type="hidden" name="Email" value="<?php echo $user["EMAIL"]; ?>">
-            <?php if ($isActive) { ?>
+            <input type="hidden" name="Email" value="<?php echo $email; ?>">
+            <?php if ($isActive && !$emailInput) { ?>
                 <h3 class="text-header">Email</h3>
-                <div><?php echo $email; ?></div>
+                <div><?php echo $emailCurrent; ?></div>
             <?php } else { ?>
                 <div class="float-label--container">
                     <label class="float-label" for="email">Email</label>
@@ -182,4 +190,5 @@ $_SESSION["recipientId"] = $recipientId;
 $_SESSION["encodedId"] = $encodedId;
 $_SESSION["fidn"] = $fidn;
 $_SESSION["name"] = $name;
+$_SESSION["user_email"] = $emailCurrent;
 ?>
