@@ -9,12 +9,13 @@
  **/
 
 function mailer($name, $newemail, $id) {
-  $credentials = parse_ini_file(__DIR__ . "/data.ini", true);
+  $credentials = parse_ini_file(__DIR__ . "/../data.ini", true);
+  $credentialsMailer = $credentials['mailer'];
 
-  $headers = "Sender: {$credentials['mailer']['from']}
-From: {$credentials['mailer']['fromName']} <{$credentials['mailer']['from']}>
-Reply-To: {$credentials['mailer']['fromName']} <{$credentials['mailer']['from']}>
-CC: {$credentials['mailer']['fromName']} <{$credentials['mailer']['from']}>";
+  $headers = "Sender: {$credentialsMailer['from']}
+From: {$credentialsMailer['fromName']} <{$credentialsMailer['from']}>
+Reply-To: {$credentialsMailer['fromName']} <{$credentialsMailer['from']}>
+CC: {$credentialsMailer['fromName']} <{$credentialsMailer['from']}>";
 
   $message = "Can you please update the preferred email for the following constituent:
   
@@ -25,7 +26,7 @@ CC: {$credentials['mailer']['fromName']} <{$credentials['mailer']['from']}>";
   $status = "Not Tried";
   if (filter_var($newemail, FILTER_VALIDATE_EMAIL)) {
     try {
-      mail($credentials['mailer']['to'], $credentials['mailer']['subject'] . ": $name", $message, $headers);
+      mail($credentialsMailer['to'], $credentialsMailer['subject'] . ": $name", $message, $headers);
       $status = "Success";
     }
     catch (Exception $e) {

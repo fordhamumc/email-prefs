@@ -10,21 +10,23 @@
 
 session_start();
 date_default_timezone_set('America/New_York');
-define("IMC_DIR", __DIR__."/../imc_connector");
+define("IMC_DIR", __DIR__ . "/../imc_connector");
 
 $qa = filter_input( INPUT_GET, "qa", FILTER_SANITIZE_NUMBER_INT );
 if ($qa !== null || !array_key_exists("qa", $_SESSION)) $_SESSION["qa"] = $qa;
 
-require_once IMC_DIR."/ImcConnector.php";
+require_once IMC_DIR . "/ImcConnector.php";
 $options = json_decode(file_get_contents(IMC_DIR."/prefOptions.json"), TRUE);
 
-$credentials = parse_ini_file(IMC_DIR . (($_SESSION["qa"] == 1) ? "/authData-qa.ini" : "/authData.ini"), true);
+$credentials = parse_ini_file(__DIR__ . "/../data.ini", true);
+$credentialsIMC = ($_SESSION["qa"] == 1) ? $credentials["imcqa"] : $credentials["imc"];
+$credentialsMC = ($_SESSION["qa"] == 1) ? $credentials["mailchimpqa"] : $credentials["mailchimp"];
 
-ImcConnector::getInstance($credentials["imc"]["baseUrl"]);
+ImcConnector::getInstance($credentialsIMC["baseUrl"]);
 ImcConnector::getInstance()->authenticateRest(
-    $credentials["imc"]["client_id"],
-    $credentials["imc"]["client_secret"],
-    $credentials["imc"]["refresh_token"]
+    $credentialsIMC["client_id"],
+    $credentialsIMC["client_secret"],
+    $credentialsIMC["refresh_token"]
 );
 
 
@@ -54,7 +56,7 @@ $query = http_build_query($query,'','&');
     <link rel="stylesheet" href="css/main.css" type="text/css">
 </head>
 <body>
-<?php if ($_SESSION["qa"]) { ?>
+<?php if ($_SESSION["qa"] == 1) { ?>
 <div class="alert"><a href="/?<?php echo $query;?>&qa=0">Currently using the IMC QA database. <span>Switch to IMC Prod.</span></a></div>
 <?php } ?>
 <div class="container logo">

@@ -42,7 +42,7 @@ $prefsList = array();
 
 if ($recipientId || $encodedId) {
     try {
-        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentials["imc"]["database_id"], $recipientId, $encodedId)), true);
+        $user = json_decode(json_encode(ImcConnector::getInstance()->selectRecipientData($credentialsIMC["database_id"], $recipientId, $encodedId)), true);
         $lastModified = strtotime($user['LastModified']);
         $emailCurrent = $user["EMAIL"];
         $newEmail = filter_var(get_column_value($user, 'New_email'), FILTER_VALIDATE_EMAIL);
@@ -191,4 +191,5 @@ $_SESSION["encodedId"] = $encodedId;
 $_SESSION["fidn"] = $fidn;
 $_SESSION["name"] = $name;
 $_SESSION["user_email"] = $emailCurrent;
+$_SESSION["mailchimp"] = filter_input( INPUT_GET, "m", FILTER_SANITIZE_NUMBER_INT );
 ?>

@@ -1,22 +1,25 @@
 <pre>
 <?php
-require_once __DIR__.'/ImcConnector.php';
+require_once __DIR__ . '/ImcConnector.php';
+$qa = filter_input( INPUT_GET, "qa", FILTER_SANITIZE_NUMBER_INT );
 
 echo "Parsing credentials file...\n";
-$credentials = parse_ini_file(__DIR__.'/authData.ini', true);
+$credentials = parse_ini_file(__DIR__ . '/../data.ini', true);
+$credentialsIMC = ($qa == 1) ? $credentials["imcqa"] : $credentials["imc"];
+
 
 echo "Setting base URL...\n";
-ImcConnector::getInstance($credentials['imc']['baseUrl']);
+ImcConnector::getInstance($credentialsIMC['baseUrl']);
 
 echo "Authenticating to REST API...\n";
 ImcConnector::getInstance()->authenticateRest(
-	$credentials['imc']['client_id'],
-	$credentials['imc']['client_secret'],
-	$credentials['imc']['refresh_token']
+	$credentialsIMC['client_id'],
+	$credentialsIMC['client_secret'],
+	$credentialsIMC['refresh_token']
 	);
 
 echo "\nRetrieving list key columns...\n";
-$result = ImcConnector::getInstance()->getListMetaData($credentials['imc']['database_id']);
+$result = ImcConnector::getInstance()->getListMetaData($credentialsIMC['database_id']);
 echo json_encode($result->KEY_COLUMNS, JSON_PRETTY_PRINT);
 
 echo "\n\nRetrieving recipient info...\n";
@@ -25,7 +28,7 @@ $email = filter_input( INPUT_GET, 'email', FILTER_SANITIZE_EMAIL );
 
 if ($recipientId) {
 	try {
-		$result = ImcConnector::getInstance()->selectRecipientData($credentials['imc']['database_id'], $recipientId, $email);
+		$result = ImcConnector::getInstance()->selectRecipientData($credentialsIMC['database_id'], $recipientId, $email);
 		echo json_encode($result, JSON_PRETTY_PRINT);
 	}
 	catch (ImcConnectorException $sce) {
