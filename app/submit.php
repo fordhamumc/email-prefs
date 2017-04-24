@@ -75,7 +75,8 @@ try {
     $user = json_decode(json_encode(ImcConnector::getInstance()->updateRecipient($credentialsIMC["database_id"], $recipientId, $encodedId, $fields, $syncFields)), true);
 }
 catch (ImcConnectorException $sce) {
-    $errors = "We are having trouble updating your information.";
+    error_log( json_encode($sce) );
+    $errors = "We are having trouble updating your information." . "<br>";
 }
 
 
@@ -86,31 +87,36 @@ catch (ImcConnectorException $sce) {
  * If an error occurs, it populates an error message
  **/
 
-if ($_SESSION["mailchimp"] == 1) {
-
-    $subscriber_hash = $MailChimp->subscriberHash(strtolower($_POST["Email"]));
+$subscriber_hash = $MailChimp->subscriberHash(strtolower($_POST["Email"]));
+$mcstatus = $MailChimp->get("lists/{$credentialsMC['list_id']}/members/$subscriber_hash")["status"];
+if ($mcstatus) {
+    echo "updating mailchimp...";
     $mergefields = ["merge_fields" => $merge];
     $mcargs = array();
-    if (filter_var($fields["New_email"], FILTER_VALIDATE_EMAIL) ) {
-        $mcargs["email_address"] = $fields["New_email"];
+    if ( array_key_exists("New_email", $fields) ) {
+        if (filter_var($fields["New_email"], FILTER_VALIDATE_EMAIL)) {
+            $mcargs["email_address"] = $fields["New_email"];
+        }
     }
-    $mcargs["status"] = ($fields["Fordham Opt Out"] === "Yes") ? "unsubscribed" : "subscribed";
+    if ($fields["Fordham Opt Out"] === "Yes") {
+        $mcargs["status"] = "unsubscribed";
+    } elseif ($mcstatus !== "subscribed") {
+        $mcargs["status"] = "pending";
+    }
     $mcargs["merge_fields"] = $merge;
 
     $mcresult = $MailChimp->patch("lists/{$credentialsMC['list_id']}/members/$subscriber_hash", $mcargs);
 
     if (!$MailChimp->success()) {
+
+        error_log( json_encode($MailChimp->getLastRequest()) );
+        error_log( json_encode($MailChimp->getLastResponse()) );
         if (array_key_exists("errors", $mcresult)) {
             foreach ($mcresult["errors"] as $error) {
                 $errors .= $error["message"] . "<br>";
             }
         } else {
-            if (strpos($mcresult["title"], 'Compliance State') !== false) {
-                $mcargs["status"] = "pending";
-                $mcresult = $MailChimp->patch("lists/{$credentialsMC['list_id']}/members/$subscriber_hash", $mcargs);
-            } else {
-                $errors = "We are having trouble updating your information.";
-            }
+            $errors = "We are having trouble updating your information.";
         }
     }
 }

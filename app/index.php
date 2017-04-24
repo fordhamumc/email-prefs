@@ -1,5 +1,6 @@
 <?php
 include_once "inc/header.php";
+include_once "mailchimp/MailChimp.php";
 
 /**
  * Set defaults
@@ -13,10 +14,14 @@ include_once "inc/header.php";
  * @param string $role          A custom IMC field containing roles associated with the user
  * @param string $fidn          A custom IMC field containing the Fordham ID of the user
  * @param string $name          A concatenated field of the first and last names
+ * @param string $exclusions    Exclusion codes for the user
  * @param string $optOut        The Opt Out status of the user
  * @param string $isActive      A field indicating if the user is an active Employee or Student
  * @param array  $prefsList     An array of Preference objects identifying the previously set preferences of the user
  **/
+
+use \DrewM\MailChimp\MailChimp;
+$MailChimp = new MailChimp($credentialsMC["api_key"]);
 
 $recipientId = filter_input( INPUT_GET, "id", FILTER_SANITIZE_NUMBER_INT );
 $encodedId = filter_input( INPUT_GET, "eid", FILTER_SANITIZE_STRING );
@@ -66,6 +71,26 @@ if ($recipientId || $encodedId) {
     }
     catch (ImcConnectorException $sce) {
         $user = array();
+    }
+}
+
+
+/**
+ * Check if user is in Mailchimp
+ *
+ * If they are set a flag to update Mailchimp
+ * Check Exclusion codes for NOC and EMC and if they exist set optOut to yes
+ **/
+
+$subscriber_hash = $MailChimp->subscriberHash(strtolower($email));
+$mcresult = $MailChimp->get("lists/{$credentialsMC['list_id']}/members/$subscriber_hash");
+
+if ($mcresult["status"] !== 404) {
+    echo $mcresult["status"];
+    $exclusions = $mcresult["merge_fields"]["EXCLUSION"];
+
+    if ($mcresult["status"] === "unsubscribed" || $mcresult["status"] === "cleaned" || strpos($exclusions, "^NOC^") !== false || strpos($exclusions, "^EMC^") !== false) {
+        $optOut = "yes";
     }
 }
 
@@ -191,5 +216,4 @@ $_SESSION["encodedId"] = $encodedId;
 $_SESSION["fidn"] = $fidn;
 $_SESSION["name"] = $name;
 $_SESSION["user_email"] = $emailCurrent;
-$_SESSION["mailchimp"] = filter_input( INPUT_GET, "m", FILTER_SANITIZE_NUMBER_INT );
 ?>
