@@ -122,6 +122,11 @@ if ($mcstatus) {
     } elseif ($mcstatus !== "subscribed") {
         $mcargs["status"] = "pending";
     }
+
+    // remove from CRM Opt Out group
+    if ($fields["Fordham Opt Out"] !== "Yes") {
+      $mcargs["interests"][$credentialsMC["opt_out_id"]] = false;
+    }
     $mcargs["merge_fields"] = $merge;
 
     $mcresult = $MailChimp->patch("lists/{$credentialsMC['list_id']}/members/$subscriber_hash", $mcargs);

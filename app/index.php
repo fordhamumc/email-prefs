@@ -85,7 +85,7 @@ $mcresult = $MailChimp->get("lists/{$credentialsMC['list_id']}/members/$subscrib
 if ($mcresult["status"] !== 404) {
     $exclusions = $mcresult["merge_fields"]["EXCLUSION"];
 
-    if ($mcresult["status"] === "unsubscribed" || $mcresult["status"] === "cleaned" || strpos($exclusions, "^NOC^") !== false || strpos($exclusions, "^EMC^") !== false) {
+    if ($mcresult["status"] === "unsubscribed" || $mcresult["status"] === "cleaned" || $mcresult["interests"][$credentialsMC["opt_out_id"]] || strpos($exclusions, "^NOC^") !== false || strpos($exclusions, "^EMC^") !== false) {
         $optOut = "yes";
     }
 }
