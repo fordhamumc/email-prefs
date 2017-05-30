@@ -6,6 +6,7 @@ $recipientId = $_SESSION["recipientId"];
 $encodedId = $_SESSION["encodedId"];
 $fidn = $_SESSION["fidn"];
 $name = $_SESSION["name"];
+$exclusions = $_SESSION["exclusions"];
 $fields = array();
 $merge = array();
 $errors = "";
@@ -45,6 +46,25 @@ foreach($options as $option) {
 
 // Add global opt out to fields array
 set_field("Fordham Opt Out", "OPTOUT", $fields, $merge);
+
+// Remove exclusion codes if opting in
+if ($fields["Fordham Opt Out"] !== "Yes") {
+  $exclusionArr = explode(",", $exclusions);
+
+  if(($key = array_search("^EMC^", $exclusionArr)) !== false) {
+    unset($exclusionArr[$key]);
+  }
+
+  if(($key = array_search("^NOC^", $exclusionArr)) !== false) {
+    unset($exclusionArr[$key]);
+    foreach(["^APC^","^AMC^"] as $ec) {
+      if (!in_array($ec, $exclusionArr)) {
+        $exclusionArr[] = $ec;
+      }
+    }
+  }
+  $merge["EXCLUSION"] = implode(",",$exclusionArr);
+}
 
 // Add a new email if it is a valid email and is different from the current email
 if ( array_key_exists("New_email", $_POST) ) {
@@ -90,7 +110,6 @@ catch (ImcConnectorException $sce) {
 $subscriber_hash = $MailChimp->subscriberHash(strtolower($_POST["Email"]));
 $mcstatus = $MailChimp->get("lists/{$credentialsMC['list_id']}/members/$subscriber_hash")["status"];
 if ($mcstatus) {
-    echo "updating mailchimp...";
     $mergefields = ["merge_fields" => $merge];
     $mcargs = array();
     if ( array_key_exists("New_email", $fields) ) {
@@ -123,6 +142,39 @@ if ($mcstatus) {
 
 
 /**
+ * Update new email
+ **/
+
+$update = "Can you please update the following fields for {$name} ({$fidn}):\n\n";
+$hasUpdate = false;
+
+if (array_key_exists("New_email", $fields)) {
+  if ( filter_var($fields["New_email"], FILTER_VALIDATE_EMAIL) ) {
+    $hasUpdate = true;
+    $update .= "Preferred Email: {$fields["New_email"]}\n";
+  }
+}
+
+if (strpos($exclusions, "^NOC^") !== false || strpos($exclusions, "^EMC^") !== false) {
+  $hasUpdate = true;
+  $update .= "Exclusion Codes:\n";
+}
+
+if (strpos($exclusions, "^NOC^") !== false) {
+  $update .= "\tRemove the NOC exclusion code and replace it with AMC and APC\n";
+}
+
+if (strpos($exclusions, "^EMC^") !== false) {
+  $update .= "\tRemove the EMC exclusion code\n";
+}
+
+if ($hasUpdate) {
+  mailer($name, $update);
+}
+
+
+
+/**
  * Display response
  *
  * Displays success or error message to the user.
@@ -131,26 +183,17 @@ if ($mcstatus) {
 
 $header = (empty($errors)) ? "Thank You" : "An Error Has Occurred";
 if (empty($errors)) {
-    $header = "Thank You";
-    $message = "<p>You have successfully updated your preferences.</p>
+  $header = "Thank You";
+  $message = "<p>You have successfully updated your preferences.</p>
                 <p>Visit the <a href=\"http://fordham.edu\">Fordham Homepage.</a></p>";
 } else {
-    $header = "An Error Has Occurred";
-    $message = "<p class='error'>{$errors}</p>
+  $header = "An Error Has Occurred";
+  $message = "<p class='error'>{$errors}</p>
                 <p>Please contact <a href='mailto:emailmarketing@fordham.edu'>emailmarketing@fordham.edu</a>.</p>";
 }
-
-
-/**
- * Update new email
- **/
-
-$email = "";
-if (array_key_exists("New_email", $fields)) {
-    $email =  $fields["New_email"];
-}
-mailer($name, $email, $fidn);
 ?>
+
+
 <header class="intro container">
     <h1 class="intro-heading"><?php echo $header; ?></h1>
 </header>

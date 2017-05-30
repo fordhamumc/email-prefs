@@ -33,6 +33,7 @@ $emailCurrent = "";
 $role = "";
 $fidn = "";
 $name = "";
+$exclusions = "";
 $optOut = "no";
 $isActive = false;
 $prefsList = array();
@@ -54,10 +55,6 @@ if ($recipientId || $encodedId) {
 
         if (!$email) {
             $email = $user["EMAIL"];
-        }
-
-        if ( strtotime($user['LastModified']) < strtotime("+1 week") && $newEmail  ) {
-            $email = $newEmail;
         }
         $role = json_encode(get_column_value($user, 'Role'));
         $fidn = get_column_value($user, 'Fordham ID');
@@ -86,7 +83,6 @@ $subscriber_hash = $MailChimp->subscriberHash(strtolower($email));
 $mcresult = $MailChimp->get("lists/{$credentialsMC['list_id']}/members/$subscriber_hash");
 
 if ($mcresult["status"] !== 404) {
-    echo $mcresult["status"];
     $exclusions = $mcresult["merge_fields"]["EXCLUSION"];
 
     if ($mcresult["status"] === "unsubscribed" || $mcresult["status"] === "cleaned" || strpos($exclusions, "^NOC^") !== false || strpos($exclusions, "^EMC^") !== false) {
@@ -216,4 +212,5 @@ $_SESSION["encodedId"] = $encodedId;
 $_SESSION["fidn"] = $fidn;
 $_SESSION["name"] = $name;
 $_SESSION["user_email"] = $emailCurrent;
+$_SESSION["exclusions"] = $exclusions;
 ?>
