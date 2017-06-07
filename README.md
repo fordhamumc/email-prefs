@@ -1,6 +1,6 @@
-# Custom Email Preferences Page For IBM Marketing Cloud (formerly Silverpop)
+# Custom Email Preferences Page For IBM Marketing Cloud (formerly Silverpop) and Mailchimp
 
-This preferences page uses the IBM Marketing Cloud API to populate user data on a custom email preferences page. Based on [Mark French's Silverpop PHP Connector](https://github.com/mrmarkfrench/silverpop-php-connector).
+This preferences page uses the IBM Marketing Cloud and Mailchimp APIs to populate and update user data on a custom email preferences page.
 
 ## Getting started
 

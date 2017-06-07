@@ -1,7 +1,9 @@
 <?php
-require_once __DIR__.'/ImcBaseConnector.php';
-require_once __DIR__.'/ImcRestConnector.php';
-require_once __DIR__.'/ImcConnectorException.php';
+namespace IMCConnector;
+use IMCConnector\IMCBaseConnector;
+use IMCConnector\IMCRestConnector;
+use IMCConnector\IMCConnectorException;
+use SimpleXmlElement;
 
 /**
  * This is a basic class for connecting to the Imc XML API. If you
@@ -93,7 +95,7 @@ class ImcXmlConnector extends ImcBaseConnector {
      * @param array  $syncFields  An associative array of keys and values to lookup a contact if $recipientId and $encodedId are missing
      * @param array  $optParams   An associative array of optional parameters
      * @return SimpleXmlElement
-     * @throws SilverpopConnectorException
+     * @throws IMCConnectorException
      */
     public function updateRecipient($listId, $recipientId = null, $encodedId = null, $fields, $syncFields=array(), $optParams=array()) {
         if (!preg_match('/^\d+$/', $listId)) {

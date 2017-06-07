@@ -1,6 +1,7 @@
 <?php
-require_once __DIR__.'/ImcBaseConnector.php';
-require_once __DIR__.'/ImcConnectorException.php';
+namespace IMCConnector;
+use IMCConnector\IMCBaseConnector;
+use IMCConnector\IMCConnectorException;
 
 /**
  * This is a basic class for connecting to the Imc API

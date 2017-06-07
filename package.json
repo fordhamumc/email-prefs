@@ -1,7 +1,7 @@
 {
-  "name": "ibm-marketing-cloud-preferences",
-  "version": "0.1.0",
-  "description": "Use the IBM Marketing Cloud (formally Silverpop) API to populate preferences in a custom email preference form.",
+  "name": "imc-mailchimp-preferences",
+  "version": "1.0.0",
+  "description": "A custom preference form that updates both IBM Marketing Cloud (formerlly Silverpop) and Mailchimp.",
   "author": "Michael Foley",
   "license": "MIT",
   "dependencies": {},
