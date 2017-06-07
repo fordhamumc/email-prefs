@@ -4,7 +4,7 @@ namespace Email;
 use IMCConnector\ImcConnector;
 use IMCConnector\ImcConnectorException;
 use IMCConnector\ImcXmlConnector;
-use MailChimp\MailChimp;
+use Mailchimp\Mailchimp;
 use Email\Preference;
 use Mailer\Mailer;
 

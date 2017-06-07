@@ -1,6 +1,6 @@
 <?php
 
-namespace MailChimp;
+namespace Mailchimp;
 
 /**
  * Super-simple, minimum abstraction MailChimp API v3 wrapper
@@ -10,7 +10,7 @@ namespace MailChimp;
  * @author Drew McLellan <drew.mclellan@gmail.com>
  * @version 2.2
  */
-class MailChimp
+class Mailchimp
 {
     private $api_key;
     private $api_endpoint = 'https://<dc>.api.mailchimp.com/3.0';

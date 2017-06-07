@@ -1,8 +1,8 @@
 <?php
 namespace IMCConnector;
-use IMCConnector\IMCBaseConnector;
-use IMCConnector\IMCRestConnector;
-use IMCConnector\IMCConnectorException;
+use IMCConnector\ImcBaseConnector;
+use IMCConnector\ImcRestConnector;
+use IMCConnector\ImcConnectorException;
 use SimpleXmlElement;
 
 /**

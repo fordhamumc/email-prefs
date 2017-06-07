@@ -1,6 +1,6 @@
 <?php
 namespace IMCConnector;
-use IMCConnectorException;
+use IMCConnector\ImcConnectorException;
 
 /**
  * This is a basic class for connecting to the Imc API
