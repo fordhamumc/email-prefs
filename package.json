@@ -2,8 +2,16 @@
   "name": "imc-mailchimp-preferences",
   "version": "1.0.1",
   "description": "A custom preference form that updates both IBM Marketing Cloud (formerlly Silverpop) and Mailchimp.",
-  "author": "Michael Foley",
+  "author": {
+    "name": "Michael Foley",
+    "email": "mifoley@fordham.edu",
+    "url": "https://michaeldfoley.com"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:fordhamumc/email-prefs.git"
+  },
   "dependencies": {},
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
