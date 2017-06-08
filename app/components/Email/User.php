@@ -57,6 +57,10 @@ class User
         $this->name = $this->getArrayValue('FNAME',$mcresult['merge_fields']) . " " . $this->getArrayValue('LNAME',$mcresult['merge_fields']);;
         $this->optOut = strtolower($this->getArrayValue('OPTOUT',$mcresult['merge_fields'])) == 'yes';
 
+        if (empty($this->recipientId)) {
+          $this->recipientId = $this->getArrayValue('IMCID',$mcresult['merge_fields']);
+        }
+
         foreach($options as $category) {
           $userPrefs = $this->strToArr($this->getArrayValue($category['merge'], $mcresult['merge_fields']));
           $this->addPrefsList($category, $userPrefs);
