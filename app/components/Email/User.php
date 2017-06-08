@@ -44,37 +44,9 @@ class User
     $this->encodedId = $encodedId;
     $this->email = $this->emailInput = strtolower($emailInput);
     $this->source = $source;
+    $data = array();
 
-    if ($this->email) {
-      $mcresult = $this->getMailchimpData($credentials['mailchimp']);
-      if ($mcresult['status'] !== 404) {
-        $this->exclusions = $this->strToArr($mcresult['merge_fields']['EXCLUSION']);
-        $this->mcStatus = $mcresult['status'];
-
-        $this->dataFrom = "Mailchimp";
-        $this->role = $this->strToArr($this->getArrayValue('ROLE',$mcresult['merge_fields']));
-        $this->fidn = $this->getArrayValue('FIDN',$mcresult['merge_fields']);
-        $this->name = $this->getArrayValue('FNAME',$mcresult['merge_fields']) . " " . $this->getArrayValue('LNAME',$mcresult['merge_fields']);;
-        $this->optOut = strtolower($this->getArrayValue('OPTOUT',$mcresult['merge_fields'])) == 'yes';
-
-        if (empty($this->recipientId)) {
-          $this->recipientId = $this->getArrayValue('IMCID',$mcresult['merge_fields']);
-        }
-
-        foreach($options as $category) {
-          $userPrefs = $this->strToArr($this->getArrayValue($category['merge'], $mcresult['merge_fields']));
-          $this->addPrefsList($category, $userPrefs);
-        }
-
-        $this->optOut = ($mcresult['status'] === "unsubscribed" ||
-          $mcresult['status'] === "cleaned" ||
-          $mcresult['interests'][$credentials['mailchimp']['opt_out_id']] ||
-          in_array("NOC", $this->exclusions) ||
-          in_array("EMC", $this->exclusions) );
-      }
-    }
-
-    if (($recipientId || $encodedId) && empty($this->mcStatus)) {
+    if ($recipientId || $encodedId) {
       if ( !empty($data = $this->getIMCData($credentials['imc'], $recipientId, $encodedId)) ) {
         $this->dataFrom = "IMC";
         if (!$this->email) {
@@ -89,6 +61,37 @@ class User
           $userPrefs = $this->strToArr($this->getArrayValue($category['name'], $data, true), ';');
           $this->addPrefsList($category, $userPrefs);
         }
+      }
+    }
+
+    if ($this->email) {
+      $mcresult = $this->getMailchimpData($credentials['mailchimp']);
+      if ($mcresult['status'] !== 404) {
+        $this->exclusions = $this->strToArr($mcresult['merge_fields']['EXCLUSION']);
+        $this->mcStatus = $mcresult['status'];
+
+        if (empty($data)) {
+          $this->dataFrom = "Mailchimp";
+          $this->role = $this->strToArr($this->getArrayValue('ROLE',$mcresult['merge_fields']));
+          $this->fidn = $this->getArrayValue('FIDN',$mcresult['merge_fields']);
+          $this->name = $this->getArrayValue('FNAME',$mcresult['merge_fields']) . " " . $this->getArrayValue('LNAME',$mcresult['merge_fields']);;
+          $this->optOut = strtolower($this->getArrayValue('OPTOUT',$mcresult['merge_fields'])) == 'yes';
+
+          if (empty($this->recipientId)) {
+            $this->recipientId = $this->getArrayValue('IMCID',$mcresult['merge_fields']);
+          }
+
+          foreach($options as $category) {
+            $userPrefs = $this->strToArr($this->getArrayValue($category['merge'], $mcresult['merge_fields']));
+            $this->addPrefsList($category, $userPrefs);
+          }
+        }
+
+        $this->optOut = ($mcresult['status'] === "unsubscribed" ||
+          $mcresult['status'] === "cleaned" ||
+          $mcresult['interests'][$credentials['mailchimp']['opt_out_id']] ||
+          in_array("NOC", $this->exclusions) ||
+          in_array("EMC", $this->exclusions) );
       }
     }
 
@@ -252,7 +255,7 @@ class User
     $ecArr = $this->exclusionsRemoved;
     $ecStr = implode(', ',$ecArr);
 
-    if ($this->email !== $this->emailInput) {
+    if (!empty($this->emailInput) && $this->email !== $this->emailInput) {
       $bannerPayload .= "Preferred email: {$this->emailInput}\n";
     }
 
