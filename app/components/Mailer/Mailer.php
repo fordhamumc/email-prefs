@@ -24,7 +24,7 @@ class Mailer
                "CC: {$credentials['fromName']} <{$credentials['from']}>\r\n" .
                "X-Mailer: PHP/". phpversion();
     try {
-      mail($credentials['to'], $credentials['subjgt'] . ": {$name}", $message, $headers);
+      mail($credentials['to'], $credentials['subject'] . ": {$name}", $message, $headers);
       $status = "Success";
     } catch (Exception $e) {
       $status = $e;
