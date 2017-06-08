@@ -164,6 +164,7 @@ class User
         $imcSyncFields );
     }
     catch (ImcConnectorException $sce) {
+      error_log( $_SERVER['REQUEST_URI'] );
       error_log( json_encode($sce) );
       $imcResult = $sce;
       $error = true;
@@ -232,7 +233,7 @@ class User
     $mcresult = $MailChimp->patch("lists/{$credentials['list_id']}/members/$subscriber_hash", $malichimpPayload);
 
     if (!$MailChimp->success()) {
-
+      error_log( $_SERVER['REQUEST_URI'] );
       error_log(json_encode($MailChimp->getLastRequest()));
       error_log(json_encode($MailChimp->getLastResponse()));
       $error = true;
