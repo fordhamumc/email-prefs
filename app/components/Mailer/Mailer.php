@@ -18,9 +18,10 @@ class Mailer
   public static function mail($credentials, $name, $message)
   {
 
-    $headers = "Sender: {$credentials['from']}\r\n" .
+    $headers = "Sender: {$credentials['fromName']} <{$credentials['from']}>\r\n" .
                "From: {$credentials['fromName']} <{$credentials['from']}>\r\n" .
-               "Reply-To: {$credentials['fromName']} <{$credentials['from']}>\r\n" .
+               "Reply-To: {$credentials['from']}\r\n" .
+               "Return-Path: {$credentials['from']}\r\n" .
                "CC: {$credentials['fromName']} <{$credentials['from']}>\r\n" .
                "X-Mailer: PHP/". phpversion();
     try {
