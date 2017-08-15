@@ -30,7 +30,7 @@ $user = new User($credentials, $options, $recipientId, $encodedId, $emailInput, 
     <section class="input-group info-section">
       <?php echo $user->displayEmailHTML(); ?>
       <label class="unsub-item">
-        <input id="input-unsub" type="checkbox" value="Yes" <?php echo ($user->isOptedOut()) ? "checked" : ""; ?> name="Fordham Opt Out"> Unsubscribe from all <?php echo ($user->isActive()) ? "non-manditory" : ""; ?> Fordham emails
+        <input id="input-unsub" type="checkbox" value="Yes" <?php echo ($user->isOptedOut()) ? "checked" : ""; ?> name="Fordham Opt Out"> Unsubscribe from all <?php echo ($user->isActive()) ? "non-mandatory" : ""; ?> Fordham emails
       </label>
     </section>
     <div class="prefs">
