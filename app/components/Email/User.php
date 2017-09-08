@@ -14,6 +14,7 @@ class User
   private $encodedId;
   private $emailInput;
   private $email;
+  private $exists = false;
   private $source;
 
   private $role = array();
@@ -48,6 +49,7 @@ class User
 
     if ($recipientId || $encodedId) {
       if ( !empty($data = $this->getIMCData($credentials['imc'], $recipientId, $encodedId)) ) {
+        $this->exists = true;
         $this->dataFrom = "IMC";
         if (!$this->email) {
           $this->email = strtolower($data['EMAIL']);
@@ -67,6 +69,7 @@ class User
     if ($this->email) {
       $mcresult = $this->getMailchimpData($credentials['mailchimp']);
       if ($mcresult['status'] !== 404) {
+        $this->exists = true;
         $this->exclusions = $this->strToArr($mcresult['merge_fields']['EXCLUSION']);
         $this->mcStatus = $mcresult['status'];
 
@@ -474,6 +477,15 @@ class User
       return $wrap . $value . $wrap;
     }, $this->exclusions);
     return implode($delim, $exclusions);
+  }
+
+  /**
+   * Does the user exist in either Mailchimp or IMC
+   *
+   * @return boolean
+   **/
+  public function exists() {
+    return $this->exists;
   }
 
   /**

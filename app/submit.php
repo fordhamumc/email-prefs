@@ -39,10 +39,13 @@ $results['mailchimp'] = $user->updateMailchimp($credentials['mailchimp']);
 $results['banner'] = $user->updateBanner($credentials['mailer']);
 
 ?>
+<?php if (!$_SESSION['plain']): ?>
 <header class="intro container">
   <h1 class="intro-heading">Thank You</h1>
 </header>
+<?php endif; ?>
 <div class="container">
+  <?php if ($_SESSION['plain']): ?><h1 class="intro-heading">Thank You</h1><?php endif; ?>
   <p>You have successfully updated your preferences.</p>
   <p><?php if ($user->isResub()): ?>To complete your subscription, please click the link in the email we just sent you.<?php endif; ?></p>
 </div>
