@@ -58,7 +58,6 @@ class User
         $this->fidn = $this->getArrayValue('Fordham ID', $data, true);
         $this->name = $this->getArrayValue('First Name', $data, true) . " " . $this->getArrayValue('Last Name', $data, true);
         $this->optOut = strtolower($this->getArrayValue('Fordham Opt Out', $data, true)) == 'yes';
-
         foreach($options as $category) {
           $userPrefs = $this->strToArr($this->getArrayValue($category['name'], $data, true), ';');
           $this->addPrefsList($category, $userPrefs);
@@ -89,12 +88,13 @@ class User
             $this->addPrefsList($category, $userPrefs);
           }
         }
-
-        $this->optOut = ($mcresult['status'] === "unsubscribed" ||
-          $mcresult['status'] === "cleaned" ||
-          $mcresult['interests'][$credentials['mailchimp']['opt_out_id']] ||
-          in_array("NOC", $this->exclusions) ||
-          in_array("EMC", $this->exclusions) );
+        if (!$this->optOut) {
+          $this->optOut = ($mcresult['status'] === "unsubscribed" ||
+            $mcresult['status'] === "cleaned" ||
+            $mcresult['interests'][$credentials['mailchimp']['opt_out_id']] ||
+            in_array("NOC", $this->exclusions) ||
+            in_array("EMC", $this->exclusions) );
+        }
       }
     }
 
