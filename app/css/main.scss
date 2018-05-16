@@ -27,7 +27,7 @@ a {
 
 p {
     margin-top: 0;
-    margin-bottom: .7em;
+    margin-bottom: 1em;
 }
 
 ::selection {
@@ -195,9 +195,15 @@ html [type=button]{
     width: 100%;
 }
 
+.gdpr {
+    font-size: .9em;
+    margin: 2.5rem auto 0;
+    max-width: 90ch;
+}
+
 
 /* ==========================================================================
-   Intro
+   Alert
    ========================================================================== */
 
 .alert {

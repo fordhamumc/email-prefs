@@ -3,7 +3,7 @@
     "name": "Events",
     "label": "Events",
     "merge": "PREFEVENTS",
-    "values": [
+    "options": [
       "Athletics",
       "Career",
       "Cultural",
@@ -19,7 +19,7 @@
     "name": "Giving",
     "label": "Giving",
     "merge": "PREFGIVING",
-    "values": [
+    "options": [
       "Giving"
     ]
   },
@@ -27,7 +27,7 @@
     "name": "Marketing Newsletters",
     "label": "News",
     "merge": "PREFNEWS",
-    "values": [
+    "options": [
       "Alumni",
       "Athletics",
       "Fordham Magazine",

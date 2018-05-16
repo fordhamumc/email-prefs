@@ -20,6 +20,7 @@ class User
   private $role = array();
   private $fidn;
   private $name;
+  private $gdpr;
   private $exclusions = array();
   private $exclusionsRemoved = array();
   private $optOut;
@@ -70,6 +71,7 @@ class User
       if ($mcresult['status'] !== 404) {
         $this->exists = true;
         $this->exclusions = $this->strToArr($mcresult['merge_fields']['EXCLUSION']);
+        $this->gdpr = $mcresult['merge_fields']['GDPR'];
         $this->mcStatus = $mcresult['status'];
 
         if (empty($data)) {
@@ -97,7 +99,6 @@ class User
         }
       }
     }
-
     $this->active = !!array_intersect(array('STUDENT_ACTIVE','EMPLOYEE','NB_EMPLOYEE'), $this->role);
   }
 
@@ -221,6 +222,11 @@ class User
     $mailchimpMerge['OPTOUT'] = ($this->isOptedOut()) ? 'Yes' : 'None';
     $mailchimpMerge['EXCLUSION'] = $this->getExclusions(',', '^');
 
+    if ( !$this->isOptedOut() && empty($this->gdpr) ) {
+      $mailchimpMerge['GDPR'] = date("r");
+    } else if ( $this->isOptedOut() ) {
+      $mailchimpMerge['GDPR'] = '';
+    }
 
     $malichimpPayload = [
       'email_address' => $this->emailInput,
@@ -336,7 +342,7 @@ class User
    * @param array   $list       The group of preferences
    **/
   private function addPrefsList($category, $userPrefs) {
-    array_push($this->prefsList, new Preference($category['name'], $category['label'], $category['merge'], $category['values'], $userPrefs));
+    array_push($this->prefsList, new Preference($category['name'], $category['label'], $category['merge'], $category['options'], $userPrefs));
   }
 
   /**
@@ -431,7 +437,7 @@ class User
       if (array_key_exists($catName, $data)) {
         $prefs = $data[$catName];
       }
-      $category->set_values($category->get_value_names(), $prefs);
+      $category->set_options($category->get_option_names(), $prefs);
     }
   }
 
@@ -459,7 +465,7 @@ class User
           $name = $category->get_name();
       }
 
-      $prefs = implode($delim, $category->get_values_checked($wrap));
+      $prefs = implode($delim, $category->get_options_checked($wrap));
       $prefsList[$name] = $prefs ?: 'None';
     }
     return $prefsList;
@@ -528,10 +534,10 @@ class User
 
     foreach ($this->prefsList as &$pref) {
       $options = "";
-      foreach ($pref->get_values() as $value) {
+      foreach ($pref->get_options() as $option) {
         $options .= strtr($templateOption, [':container' => $pref->get_name(),
-                                            ':name' => $value['name'],
-                                            ':checked' => ($value["checked"]) ? "checked" : ""]);
+                                            ':name' => $option['name'],
+                                            ':checked' => ($option["checked"]) ? "checked" : ""]);
       }
 
       $output .= strtr($templateContainer, [':container' => $pref->get_name(),
