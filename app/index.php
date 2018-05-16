@@ -15,7 +15,6 @@ $source = filter_input( INPUT_GET, "source", FILTER_SANITIZE_STRING );
 
 $user = new User($credentials, $options, $recipientId, $encodedId, $emailInput, $source);
 ?>
-
 <?php if (!$_SESSION['plain']): ?>
   <header class="intro container">
     <?php if ($source === 'mcsignup'): ?>

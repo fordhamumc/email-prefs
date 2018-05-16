@@ -19,7 +19,7 @@ unset($query['qa']);
 $query = http_build_query($query,'','&');
 $plain = filter_input( INPUT_GET, "plain", FILTER_VALIDATE_BOOLEAN );
 if ($plain !== null || !array_key_exists("plain", $_SESSION)) $_SESSION['plain'] = $plain;
-
+if (empty($_SERVER['HTTP_REFERER']) && empty($plain)) $_SESSION['plain'] = false;
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -36,7 +36,7 @@ if ($plain !== null || !array_key_exists("plain", $_SESSION)) $_SESSION['plain']
     <?php else: ?>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600" rel="stylesheet" type="text/css">
     <?php endif ?>
-    <link rel="stylesheet" href="css/main.css" type="text/css">
+    <link rel="stylesheet" href="/css/main.css" type="text/css">
     <?php if ($_SESSION['plain']): ?>
     <style type="text/css">
         body {
@@ -56,7 +56,7 @@ if ($plain !== null || !array_key_exists("plain", $_SESSION)) $_SESSION['plain']
 <?php if (!$_SESSION['plain']): ?>
 <div class="container logo">
     <a href="http://fordham.edu">
-        <img src="img/fordham.png" width="165" alt="Fordham University">
+        <img src="/img/fordham.png" width="165" alt="Fordham University">
     </a>
 </div>
 <?php endif ?>

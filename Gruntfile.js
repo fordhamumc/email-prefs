@@ -78,7 +78,8 @@ module.exports = function (grunt) {
                     cwd: '<%= paths.dev %>',
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
-                        '**/*.{html,php,ini,json}'
+                        '**/*.{html,php,ini,json}',
+                        '.htaccess'
                     ],
                     dest: '<%= paths.dist %>'
                 }]
