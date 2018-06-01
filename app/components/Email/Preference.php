@@ -45,7 +45,7 @@ class Preference
 
     $this->options = array_map(function($option) use($userPrefs) {
       return array("name" => $option,
-        "checked" => (($userPrefs === false) ? true : in_array($option, $userPrefs)));
+        "checked" => (($userPrefs[0] === '') ? true : in_array($option, $userPrefs)));
     }, $options);
   }
 
