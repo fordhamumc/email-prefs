@@ -464,9 +464,10 @@ class User
         default:
           $name = $category->get_name();
       }
-
-      $prefs = implode($delim, $category->get_options_checked($wrap));
-      $prefsList[$name] = $prefs ?: 'None';
+      $catwrap = (count($category->get_options()) > 1) ? $wrap : '';
+      $fallback = $catwrap . 'None' . $catwrap;
+      $prefs = implode($delim, $category->get_options_checked($catwrap));
+      $prefsList[$name] = $prefs ?: $fallback;
     }
     return $prefsList;
   }
