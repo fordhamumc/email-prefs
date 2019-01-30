@@ -298,6 +298,7 @@ html [type=button]{
 }
 
 .pref-label {
+    font-size: 1.17em;
     margin-top: 0;
     margin-bottom: .8em;
     display: inline-block;
@@ -317,6 +318,7 @@ html [type=button]{
 }
 
 .pref-list {
+    margin: -0.9rem 0;
     padding-bottom: 2rem;
 
     @media screen and (min-width: 35rem) {
@@ -325,8 +327,8 @@ html [type=button]{
 }
 
 .pref-item {
-    display: block;
-    padding: .5em 30px;
+    display: inline-block;
+    padding: 1rem 2.5rem;
 
     &:hover {
         background-color: #f0f0f0;
@@ -334,19 +336,15 @@ html [type=button]{
 }
 
 .pref-selector {
-    margin-left: -20px;
-    margin-right: 6px;
-    width: 14px;
+    margin-left: -1.6rem;
+    margin-right: 0.6rem;
+    width: 1rem;
 }
 
 @media screen and (min-width: 35rem) {
     .pref-list {
         column-count: 2;
-        column-gap: 50px;
-    }
-
-    .pref-item {
-        break-inside: avoid;
+        column-gap: 2rem;
     }
 }
 
@@ -366,12 +364,12 @@ html [type=button]{
     }
 
     .pref-label--container {
-        width: 20rem;
+        flex: 1 1 10rem;
         padding-bottom: 4rem;
     }
 
     .pref-list--container {
-        flex: 1;
+        flex: 1 1 50rem;
         width: 100%;
     }
 }

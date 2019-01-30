@@ -437,7 +437,7 @@ class User
       if (array_key_exists($catName, $data)) {
         $prefs = $data[$catName];
       }
-      $category->set_options($category->get_option_names(), $prefs);
+      $category->set_options($category->get_options(), $prefs);
     }
   }
 
@@ -522,7 +522,7 @@ class User
     $output = '';
     $templateContainer = "<section id=\":container\" role=\"group\" class=\"pref-section input-group\">
       <div class=\"pref-label--container\">
-        <h3 class=\"pref-label\">:label</h3>
+        <h2 class=\"pref-label\">:label</h2>
       </div>
       <div class=\"pref-list--container\">
         <div class=\"pref-list\">:options</div>
@@ -530,7 +530,8 @@ class User
     </section>";
 
     $templateOption = "<label class=\"pref-item\">
-      <input class=\"pref-selector\" type=\"checkbox\" name=\":container[]\" value=\":name\" :checked>:name
+      <input class=\"pref-selector\" type=\"checkbox\" name=\":container[]\" value=\":value\" :checked><strong>:name</strong><br>
+      :description
     </label>";
 
     foreach ($this->prefsList as &$pref) {
@@ -538,6 +539,8 @@ class User
       foreach ($pref->get_options() as $option) {
         $options .= strtr($templateOption, [':container' => $pref->get_name(),
                                             ':name' => $option['name'],
+                                            ':description' => $option['description'],
+                                            ':value' => $option['value'],
                                             ':checked' => ($option["checked"]) ? "checked" : ""]);
       }
 

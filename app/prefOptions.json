@@ -4,15 +4,42 @@
     "label": "Events",
     "merge": "PREFEVENTS",
     "options": [
-      "Athletics",
-      "Career",
-      "Cultural",
-      "Lectures",
-      "Performances",
-      "Receptions",
-      "Retreats",
-      "Reunions",
-      "Travel Program"
+      {
+        "name": "Athletics",
+        "description": "Sport-specific events, reunions, and Fordham games"
+      },
+      {
+        "name": "Career",
+        "description": "Career-building events, networking opportunities, and mentoring programs"
+      },
+      {
+        "name": "Cultural",
+        "description": "Broadway, museums, and walking tours"
+      },
+      {
+        "name": "Lectures",
+        "description": "Academic lectures, book signings, and presentations"
+      },
+      {
+        "name": "Performances",
+        "description": "Musical, dance, and theater performances"
+      },
+      {
+        "name": "Receptions",
+        "description": "Presidential and regional receptions"
+      },
+      {
+        "name": "Retreats",
+        "description": "Spiritual and wellness retreats"
+      },
+      {
+        "name": "Reunions",
+        "description": "Class, school, and affinity chapter reunions"
+      },
+      {
+        "name": "Travel Program",
+        "description": "Opportunities to explore the world with expert guides and other Fordham alumni"
+      }
     ]
   },
   {
@@ -20,7 +47,10 @@
     "label": "Giving",
     "merge": "PREFGIVING",
     "options": [
-      "Giving"
+      {
+        "name": "Giving",
+        "description": "Giving Day information and appeals from the Fordham Fund"
+      }
     ]
   },
   {
@@ -28,12 +58,32 @@
     "label": "News",
     "merge": "PREFNEWS",
     "options": [
-      "Alumni",
-      "Athletics",
-      "Fordham Magazine",
-      "Fordham News",
-      "Parents",
-      "School Specific"
+      {
+        "name": "Alumni News",
+        "value": "Alumni",
+        "description": "A monthly newsletter that includes University news, special opportunities, benefits, and more"
+      },
+      {
+        "name": "Athletics",
+        "description": "News specific to Fordham athletics"
+      },
+      {
+        "name": "Fordham Magazine",
+        "description": "A monthly email including stories from the print edition plus timely news and features found only at <a href='http://fordham.edu/magazine'>fordham.edu/magazine</a>"
+      },
+      {
+        "name": "Fordham News",
+        "description": "A weekly email for students, faculty, and staff, bringing timely campus updates and features to the University community"
+      },
+      {
+        "name": "Parents",
+        "description": "Information crucial for Fordham parents"
+      },
+      {
+        "name": "School Specific",
+        "description": "News and events pertaining specifically to the school you attended"
+      }
+
     ]
   }
 ]

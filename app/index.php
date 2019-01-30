@@ -27,7 +27,7 @@ $user = new User($credentials, $options, $recipientId, $encodedId, $emailInput, 
   </header>
 <?php endif ?>
 <?php if ($user->exists()): ?>
-  <form class="container" method="post" action="submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
+  <form class="container" method="post" action="/submit.php" pageId="6430542" siteId="258941" parentPageId="6430540">
     <div class="pref-container">
       <section class="input-group info-section">
         <?php echo $user->displayEmailHTML(); ?>

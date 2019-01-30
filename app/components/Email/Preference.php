@@ -28,14 +28,8 @@ class Preference
 
   function get_options_checked($wrap) {
     return array_filter(array_map(function($option) use($wrap) {
-      return ($option['checked']) ? $wrap . $option['name'] . $wrap : false;
+      return ($option['checked']) ? $wrap . $option['value'] . $wrap : false;
     }, $this->options));
-  }
-
-  function get_option_names() {
-    return array_map(function($option) {
-      return $option['name'];
-    }, $this->options);
   }
 
   function set_options($options, $userPrefs) {
@@ -44,8 +38,11 @@ class Preference
     }
 
     $this->options = array_map(function($option) use($userPrefs) {
-      return array("name" => $option,
-        "checked" => (($userPrefs[0] === '') ? true : in_array($option, $userPrefs)));
+        $value = array_key_exists('value', $option) ? $option['value'] : $option['name'];
+      return array("name" => $option['name'],
+        "description" => $option['description'],
+        "value" => $value,
+        "checked" => (($userPrefs[0] === '') ? true : in_array($value, $userPrefs)));
     }, $options);
   }
 
