@@ -5,3 +5,10 @@ node_modules
 .log
 .htaccess
 *.svg
+/fnt
+/honors-templates
+/watson-template
+/696348
+batch
+robots.txt
+.gitignore
