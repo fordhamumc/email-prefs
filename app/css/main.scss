@@ -74,6 +74,10 @@ html [type=button]{
     cursor: pointer;
 }
 
+option[disabled] {
+    color: rgba(0,0,0,0.6);
+}
+
 .container {
     max-width: 90rem;
     margin: 0 auto 5rem;
@@ -326,9 +330,14 @@ html [type=button]{
     }
 }
 
+.pref-select {
+    display: inline-block;
+    margin: 1.25rem 2.5rem 1rem 1.5rem;
+}
+
 .pref-item {
     display: inline-block;
-    padding: 1rem 2.5rem;
+    margin: 1rem 2.5rem;
 
     &:hover {
         background-color: #f0f0f0;
@@ -372,6 +381,32 @@ html [type=button]{
         flex: 1 1 50rem;
         width: 100%;
     }
+}
+
+
+/* ==========================================================================
+   Batch Sections
+   ========================================================================== */
+
+.batch .pref-section {
+    border: 0;
+    margin: 0;
+}
+
+.batch select {
+    margin-top: 0.3em;
+}
+
+
+/* ==========================================================================
+   Loader
+   ========================================================================== */
+
+.loader {
+    stroke: #900028;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-left: 1rem;
 }
 
 

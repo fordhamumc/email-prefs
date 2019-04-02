@@ -28,7 +28,7 @@ module.exports = function (grunt) {
             dev: {
                 bsFiles: {
                     src: [
-                        '<%= paths.tmp %>/**/*.{html,php,js,css,jpg,png,gif,svg}'
+                        '<%= paths.tmp %>/**/*.{html,php,js,css,jpe?g,png,gif,svg}'
                     ]
                 },
                 options: {
@@ -41,8 +41,12 @@ module.exports = function (grunt) {
         },
         watch: {
             files: {
-                files: ['<%= paths.dev %>/**/*.{ini,json,php,html,png,jpg,jpeg,gif,svg}'],
+                files: ['<%= paths.dev %>/**/*.{ini,json,php,html,png,jpe?g,gif,svg}'],
                 tasks: ['copy:dev']
+            },
+            batch: {
+                files: ['<%= paths.dev %>/batch/**/*.{js,png,jpe?g,gif,svg}'],
+                tasks: ['copy:batch']
             },
             sass: {
                 files: ['<%= paths.dev %>/**/*.{sass,scss}'],
@@ -67,6 +71,18 @@ module.exports = function (grunt) {
                     src: [
                         'img/**/*.{png,jpg,jpeg,gif,svg}',
                         '**/*.{html,php,ini,json}'
+                    ],
+                    dest: '<%= paths.tmp %>'
+                }]
+            },
+            batch: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%= paths.dev %>',
+                    src: [
+                        'batch/**/*.js',
+                        'batch/**/*.{png,jpg,jpeg,gif,svg}'
                     ],
                     dest: '<%= paths.tmp %>'
                 }]
@@ -151,14 +167,14 @@ module.exports = function (grunt) {
         babel: {
             options: {
                 sourceMap: true,
-                presets: ['es2015']
+                presets: ['@babel/preset-env']
             },
             dev: {
                 files: [
                     {
                         expand: true,
                         cwd: '<%= paths.dev %>',
-                        src: ['**/*.js'],
+                        src: ['js/**/*.js'],
                         dest: '<%= paths.tmp %>'
                     }
                 ]
@@ -202,6 +218,7 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', [
         'clean:dev',
         'copy:dev',
+        'copy:batch',
         'sass:dev',
         'autoprefixer:dev',
         'babel',
